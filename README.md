@@ -1,6 +1,6 @@
 # UpandUp
 
-A web application for EDM enthusiasts
+* A web application for EDM music enthusiasts that integrates with the Spotify API to discover, organize, and enjoy music.
 
 # Team
 
@@ -9,6 +9,3 @@ A web application for EDM enthusiasts
 * Aiden Padrid
 
 # Features
-
-
-
