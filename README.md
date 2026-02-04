@@ -9,3 +9,6 @@
 * Aiden Padrid
 
 # Features
+
+* Discover music
+* Find events/festivals near you
