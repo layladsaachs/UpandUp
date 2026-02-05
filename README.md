@@ -6,7 +6,7 @@
 
 * Layla Dsaachs
 * Jovanny Reyes
-* Aiden Padrid
+* Aidan Padrid
 
 # Features
 
