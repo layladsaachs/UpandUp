@@ -1,3 +1,14 @@
+'''
+
+Authentication routes for Spotify OAuth
+
+Redirecting users to Spotify login
+Receiving authorization codes
+Exchanging codes for access tokens
+
+'''
+
+
 from fastapi import APIRouter
 from fastapi.responses import RedirectResponse
 from config import SPOTIFY_CLIENT_ID, SPOTIFY_REDIRECT_URI
@@ -8,6 +19,10 @@ router = APIRouter()
 
 @router.get("/login")
 def login():
+
+    # Redirects the user to Spotify's authorization page
+    # to begin the OAuth flow
+
     print("CLIENT ID:", SPOTIFY_CLIENT_ID)
     print("REDIRECT URI:", SPOTIFY_REDIRECT_URI)
 
