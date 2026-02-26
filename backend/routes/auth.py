@@ -125,6 +125,19 @@ def get_user_playlists():
     }
 
     playlists_response = requests.get(playlists_url, headers=headers)
+    playlists_data = playlists_response.json()
 
-    return playlists_response.json()
+    simplified_playlists = []
+
+    for playlist in playlists_data.get("items", []):
+        tracks_info = playlist.get("items")
+
+        simplified_playlists.append({
+            "name": playlist.get("name"),
+            "id": playlist.get("id"),
+            "tracks_total": tracks_info["total"] if  tracks_info else 0
+        })
+
+    return simplified_playlists
+
 
