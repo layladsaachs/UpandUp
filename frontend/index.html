@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>VYBE</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+<!--Show site name, search bar, and profile + settings icons-->
+<header>
+    <h1 class = "logo">
+        <img src = "images/title-logo2.jpg">
+    </h1>
+    <input type="text" placeholder="Search music & events!">
+
+    <button id="tab1Button" class="active-tab">Music Player</button>
+    <button id="tab2Button">Live Events</button>
+
+    <div class="top-icons">
+        <img src="https://cdn-icons-png.flaticon.com/512/3524/3524636.png" />
+        <img src="https://cdn-icons-png.flaticon.com/512/149/149071.png" />
+    </div>
+</header>
+
+<!--Music Player Tab Active-->
+<div id="tab1" class="screen active">
+
+    <!--Grid container for draggable boxes-->
+    <div class="grid">
+        <div class="cell side" draggable="true">User Library</div>
+        <div class="cell middle" draggable="true">Search Results/Playlist Content</div>
+        <div class="cell side" draggable="true">Currently-Playing Song Infographic</div>
+    </div>
+
+</div>
+
+<!--Events Tab Active-->
+<div id="tab2" class="screen">
+    <h2>Beyond Wonderland March 28th</h2>
+</div>
+
+
+
+<script src="script.js"></script>
+</body>
+</html>

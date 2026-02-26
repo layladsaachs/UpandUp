@@ -1,0 +1,124 @@
+/*Global styling top to bottom*/
+body {
+    margin: 0;
+    font-family: Lucida Sans;
+    background: black;
+    color: rgb(226, 108, 209);
+}
+
+/*Styling for site name, search bar, and profile + settings icons*/
+header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0px 30px;
+    border-bottom: 3px solid rgb(19, 19, 18);
+}
+
+footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 5px 30px;
+    border-top: 3px solid rgb(19, 19, 18);
+}
+
+header input {
+    width: 50%;
+    height: 25px;
+    padding: 8px;
+    filter: invert(0.9);
+    border-radius: 20px;
+    border: 2px solid rgb(225, 225, 225)
+}
+
+.logo img{
+    width: 150px;
+    padding-bottom: 0px;
+    cursor: pointer;
+}
+
+.top-icons img {
+    width: 30px;
+    margin-left: 15px;
+    padding-bottom: 0px;
+    cursor: pointer;
+    filter: invert(1);
+}
+
+header button {
+    padding: 5px 5px;
+    border: none;
+    background: none;
+    color: white;
+    cursor: pointer;
+    font-weight: bold;
+    font-size: 12pt;
+}
+
+/*Hide screen by default*/
+.screen {
+    display: none;
+    padding: 10px;
+}
+
+/*Show screen when "active" is applied*/
+.screen.active {
+    display: block;
+}
+
+/*three-column grid*/
+.grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 15px;
+    justify-items: center;
+}
+
+/*Styling and dimensions for boxes*/
+.cell.side {
+    width: 360px;
+    height: 600px;
+    border: 4px solid #c084fc;
+    border-radius: 15px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: grab;
+    font-weight: bold;
+    transition: transform 0.3s ease;
+}
+
+.cell.middle {
+    width: 700px;
+    height: 600px;
+    border: 4px solid #c084fc;
+    border-radius: 15px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: grab;
+    font-weight: bold;
+    transition: transform 0.3s ease;
+}
+
+/*Yellow container for tab buttons
+footer {
+    position: fixed;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);       
+    background: #303134;
+    border: 2px solid rgb(255, 255, 255);
+    padding: 5px;
+    border-radius: 10px;
+}
+*/
+
+/*Styling for tab button*/
+/*Highlight button in dark gray to indicate current tab*/
+.active-tab {
+    background: rgb(0, 0, 0);
+    color: #77fec0;
+    border-radius: 6px;
+}
