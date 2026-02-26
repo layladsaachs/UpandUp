@@ -2,7 +2,6 @@
 Configuration loader for environment variables
 
 Loads variables from .env
-Exposes them as Python variables
 Keeps secrets out of source code
 
 """

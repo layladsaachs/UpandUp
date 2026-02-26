@@ -7,7 +7,7 @@ Receiving authorization codes
 Exchanging codes for access tokens
 Making authenticated requests to Spotify APIs
 
-Implements the OAuth 2.0 Authorization Code Flow
+Implements the OAuth Authorization Code Flow
 
 '''
 
@@ -17,6 +17,7 @@ from fastapi.responses import RedirectResponse
 from config import SPOTIFY_CLIENT_ID, SPOTIFY_REDIRECT_URI
 from urllib.parse import urlencode
 
+access_token_storage = {}
 
 router = APIRouter()
 
@@ -37,7 +38,8 @@ def login():
         "client_id": SPOTIFY_CLIENT_ID,
         "response_type": "code",
         "redirect_uri": SPOTIFY_REDIRECT_URI,
-        "scope": "user-read-email playlist-read-private"
+        "scope": "user-read-email playlist-read-private",
+        "show_dialog": "true"
     }
 
     url = f"{auth_url}?{urlencode(params)}"
@@ -77,6 +79,10 @@ def callback(code: str):
     # Extract access token from Spotify response
     access_token = token_data.get("access_token")
 
+    access_token_storage["access_token"] = access_token
+
+    return {"message": "Login successful. Token stored."}
+
     # Use access token to fetch the authenticated users profile
     user_url = "https://api.spotify.com/v1/me"
     headers = {
@@ -87,3 +93,38 @@ def callback(code: str):
     user_data = user_response.json()
 
     return user_data
+
+@router.get("/me")
+def get_user_profile():
+    access_token = access_token_storage.get("access_token")
+
+    if not access_token:
+        return {"error": "User not authenticated"}
+
+    user_url = "https://api.spotify.com/v1/me"
+
+    headers = {
+        "Authorization": f"Bearer {access_token}"
+    }
+
+    user_response = requests.get(user_url, headers=headers)
+
+    return user_response.json()
+
+@router.get("/playlists")
+def get_user_playlists():
+    access_token = access_token_storage.get("access_token")
+
+    if not access_token:
+        return {"error": "User not authenitcated"}
+
+    playlists_url = "https://api.spotify.com/v1/me/playlists"
+
+    headers = {
+        "Authorization": f"Bearer {access_token}"
+    }
+
+    playlists_response = requests.get(playlists_url, headers=headers)
+
+    return playlists_response.json()
+
