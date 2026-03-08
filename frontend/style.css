@@ -79,7 +79,7 @@ header button {
 .cell.side {
     width: 360px;
     height: 600px;
-    border: 4px solid #c084fc;
+    border: 2px solid #c084fc;
     border-radius: 15px;
     display: flex;
     align-items: center;
@@ -101,19 +101,6 @@ header button {
     font-weight: bold;
     transition: transform 0.3s ease;
 }
-
-/*Yellow container for tab buttons
-footer {
-    position: fixed;
-    bottom: 20px;
-    left: 50%;
-    transform: translateX(-50%);       
-    background: #303134;
-    border: 2px solid rgb(255, 255, 255);
-    padding: 5px;
-    border-radius: 10px;
-}
-*/
 
 /*Styling for tab button*/
 /*Highlight button in dark gray to indicate current tab*/
