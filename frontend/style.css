@@ -122,9 +122,9 @@ header button {
 .event-list h2{
     color: rgb(226,108,209);
     font-weight: bold;
-    margin-left: 300px;
+    margin-left: 180px;
     margin-bottom: 15px;
-    font-size: 2rem;
+    font-size: 32px;
 }
 
 .carousel-mechanism{
@@ -134,10 +134,10 @@ header button {
     gap: 25px;
 }
 
-.carousel-slide{
+.carousel-track{
     display: flex;
     gap: 50px;
-    width: 920px;
+    width: 1150px;
     overflow: hidden;
     scroll-behavior: smooth;
 }
@@ -163,10 +163,11 @@ header button {
     border: 3px solid #d16cff;
     background: #171717;
     color: #d16cff;
-    font-size: 1.8rem;
+    font-size: 28.8px;
     cursor: pointer;
 }
 
 .arrow:hover{
-    transform: scale(1.05);
+    transform: scale(1.1);
 }
+
