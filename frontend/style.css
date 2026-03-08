@@ -80,7 +80,7 @@ header button {
 /*Styling and dimensions for boxes*/
 .cell.side {
     width: 360px;
-    height: 600px;
+    height: 555px;
     border: 2px solid #c084fc;
     border-radius: 15px;
     display: flex;
@@ -93,7 +93,7 @@ header button {
 
 .cell.middle {
     width: 700px;
-    height: 600px;
+    height: 555px;
     border: 2px solid #c084fc;
     border-radius: 15px;
     display: flex;
@@ -123,7 +123,7 @@ header button {
     color: rgb(226,108,209);
     font-weight: bold;
     margin-left: 180px;
-    margin-bottom: 15px;
+    margin-bottom: 5px;
     font-size: 32px;
 }
 
@@ -163,11 +163,34 @@ header button {
     border: 3px solid #d16cff;
     background: #171717;
     color: #d16cff;
-    font-size: 28.8px;
+    font-size: 20px;
     cursor: pointer;
 }
 
 .arrow:hover{
     transform: scale(1.1);
 }
+
+
+/* Now-Playing Interface (Footer) */
+
+.now-playing{
+    background: #171717;
+    border-top: 3px solid #444;
+    display: flex;
+    text-align: center;
+    justify-content: center;
+}
+
+.play{
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    border: 3px solid #d16cff;
+    background: #171717;
+    color: #d16cff;
+    cursor: pointer;
+    font-size: 20px;
+}
+
 
