@@ -1,9 +1,10 @@
+/*--Music Player Design--*/
+
 /*Global styling top to bottom*/
 body {
     margin: 0;
     font-family: Lucida Sans;
     background: black;
-    color: rgb(226, 108, 209);
 }
 
 /*Styling for site name, search bar, and profile + settings icons*/
@@ -73,13 +74,14 @@ header button {
     grid-template-columns: repeat(3, 1fr);
     gap: 15px;
     justify-items: center;
+    color: rgb(226, 108, 209);
 }
 
 /*Styling and dimensions for boxes*/
 .cell.side {
     width: 360px;
-    height: 600px;
-    border: 4px solid #c084fc;
+    height: 555px;
+    border: 2px solid #c084fc;
     border-radius: 15px;
     display: flex;
     align-items: center;
@@ -91,8 +93,8 @@ header button {
 
 .cell.middle {
     width: 700px;
-    height: 600px;
-    border: 4px solid #c084fc;
+    height: 555px;
+    border: 2px solid #c084fc;
     border-radius: 15px;
     display: flex;
     align-items: center;
@@ -102,23 +104,93 @@ header button {
     transition: transform 0.3s ease;
 }
 
-/*Yellow container for tab buttons
-footer {
-    position: fixed;
-    bottom: 20px;
-    left: 50%;
-    transform: translateX(-50%);       
-    background: #303134;
-    border: 2px solid rgb(255, 255, 255);
-    padding: 5px;
-    border-radius: 10px;
-}
-*/
-
 /*Styling for tab button*/
 /*Highlight button in dark gray to indicate current tab*/
 .active-tab {
     background: rgb(0, 0, 0);
-    color: #77fec0;
+    color: rgb(226, 108, 209);
     border-radius: 6px;
 }
+
+
+/*--Events Design--*/
+
+.event-list{
+    margin-bottom: 60px;
+}
+
+.event-list h2{
+    color: rgb(226,108,209);
+    font-weight: bold;
+    margin-left: 180px;
+    margin-bottom: 5px;
+    font-size: 32px;
+}
+
+.carousel-mechanism{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 25px;
+}
+
+.carousel-track{
+    display: flex;
+    gap: 50px;
+    width: 1150px;
+    overflow: hidden;
+    scroll-behavior: smooth;
+}
+
+.event{
+    min-width: 180px;
+    height: 160px;
+    display: flex;
+    color: rgb(225,225,225);
+    font-weight: bold;
+    align-items: center;
+    justify-content: center;
+    background: #171717;
+    border: 3px solid #444;
+    cursor: pointer;
+    flex-shrink: 0;
+}
+
+.arrow{
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    border: 3px solid #d16cff;
+    background: #171717;
+    color: #d16cff;
+    font-size: 20px;
+    cursor: pointer;
+}
+
+.arrow:hover{
+    transform: scale(1.1);
+}
+
+
+/* Now-Playing Interface (Footer) */
+
+.now-playing{
+    background: #171717;
+    border-top: 3px solid #444;
+    display: flex;
+    text-align: center;
+    justify-content: center;
+}
+
+.play{
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    border: 3px solid #d16cff;
+    background: #171717;
+    color: #d16cff;
+    cursor: pointer;
+    font-size: 20px;
+}
+
+

@@ -1,3 +1,5 @@
+// Tab 1 : Music Player Functions
+
 // Obtain buttons from HTML file (document)
 const tab1Button = document.getElementById("tab1Button");
 const tab2Button = document.getElementById("tab2Button");
@@ -68,3 +70,31 @@ cells.forEach(cell => {
     });
 
 });
+
+
+// Tab 2 : Event Functions
+const arrows = document.querySelectorAll(".arrow");
+
+arrows.forEach(button => {
+    button.addEventListener("click", () => {
+        
+        const track = document.getElementById(button.dataset.track);
+        const scrollAmount = 230;
+
+        if(button.classList.contains("right")){   
+            if(track.scrollLeft + track.clientWidth >= track.scrollWidth){
+                track.scrollLeft = 0;
+            }else{
+                track.scrollLeft += scrollAmount;
+            }
+        }else{
+            if(track.scrollLeft <= 0){
+                track.scrollLeft = track.scrollWidth;
+            }else{
+                track.scrollLeft -= scrollAmount;
+            }
+        }
+    });
+});
+
+       
