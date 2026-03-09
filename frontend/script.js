@@ -97,4 +97,20 @@ arrows.forEach(button => {
     });
 });
 
-       
+
+const searchButton = document.getElementById("searchButton");
+const searchBar = document.getElementById("searchBar");
+
+searchButton.addEventListener("click", () => {
+    const query = searchBar.value;
+
+    // Show in console
+    console.log("User searched for:", query);
+
+    // Temporary display on page
+    const resultsDiv = document.getElementById("results");
+    resultsDiv.innerHTML = `
+        <h2>Search Results</h2>
+        <p>Searching for: ${query}</p>
+    `;
+});
