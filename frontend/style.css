@@ -194,3 +194,23 @@ header button {
 }
 
 
+/* Trending Section */
+.trending {
+    background: #111;
+    border: 2px solid #c084fc;
+    border-radius: 10px;
+    padding: 10px;
+    margin-bottom: 15px;
+}
+
+.trending h3 {
+    color: #77fec0;
+}
+
+/* Hover animation for boxes and cards */
+.cell:hover,
+.artist-card:hover,
+.event-card:hover {
+    transform: scale(1.03);
+    transition: transform 0.3s ease;
+}
