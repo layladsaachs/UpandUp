@@ -216,3 +216,20 @@ header button {
     transition: transform 0.3s ease;
 }
 
+/* playlist display */
+.playlist-item {
+    margin-top: 12px;
+    padding: 8px;
+    border: 1px solid #a855f7;
+    border-radius: 8px;
+}
+
+.playlist-name {
+    font-weight: bold;
+    font-size: 14px;
+}
+
+.playlist-tracks {
+    font-size: 12px;
+    opacity: 0.8;
+}
