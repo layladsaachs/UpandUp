@@ -169,6 +169,7 @@ header button {
 
 .arrow:hover{
     transform: scale(1.1);
+    transition: transform 0.3s ease;
 }
 
 
@@ -214,3 +215,4 @@ header button {
     transform: scale(1.03);
     transition: transform 0.3s ease;
 }
+
