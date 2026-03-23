@@ -114,3 +114,44 @@ searchButton.addEventListener("click", () => {
         <p>Searching for: ${query}</p>
     `;
 });
+
+
+// Load playlist into user library
+async function loadPlaylists() {
+    try {
+        const response = await fetch("http://127.0.0.1:8000/playlists");
+        const data = await response.json();
+
+        console.log("Playlists:", data);
+
+        const libraryDiv = document.getElementById("userLibrary");
+
+        const oldSection = document.getElementById("playlistSection");
+        if (oldSection) oldSection.remove();
+
+        const playlistSection = document.createElement("div");
+        playlistSection.id = "playlistSection";
+
+        data.forEach(playlist => {
+            const div = document.createElement("div");
+            div.classList.add("playlist-item");
+
+            div.innerHTML = `
+                <div class="playlist-name">${playlist.name}</div>
+                <div class="playlist-tracks">
+                    Tracks: ${playlist.tracks_total}
+                </div>
+            `;
+            playlistSection.appendChild(div);
+        });
+
+        libraryDiv.appendChild(playlistSection);
+
+    } catch (error) {
+        console.error("Error loading playlists:", error);
+    }
+}
+
+document.addEventListener("DOMContentLoaded", () => {
+    loadPlaylists();
+});

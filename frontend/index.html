@@ -12,7 +12,7 @@
     <h1 class = "logo">
         <img src = "title-logo2.jpg">
     </h1>
-    <input type="text" id="searchBar" placeholder="Search music & events!">
+    <input type="text" placeholder="Search music & events!">
 
     <button id="tab1Button" class="active-tab">Music Player</button>
     <button id="tab2Button">Live Events</button>
@@ -28,7 +28,9 @@
 
     <!--Grid container for draggable boxes-->
     <div class="grid">
-        <div class="cell side" draggable="true">User Library</div>
+        <div class="cell side" id="userLibrary" draggable="true">
+            <h3>User Library</h3>
+        </div>
         <div class="cell middle" id="results" draggable="true">
     <h2>Search Results</h2>
 
@@ -92,32 +94,6 @@
         </div>
     </section>
 
-</div>
-
-
-<!--Search Results-->
-<div id="search-results">
-    <h2>Songs</h2>
-        <div class="song-results">
-            <div class="result">Song 1</div>
-            <div class="result">Song 2</div>
-            <div class="result">Song 3</div>
-            <div class="result">Song 4</div>
-        </div>
-    <h2>Artists</h2>
-        <div class="artist-results">
-            <div class="result">Artist 1</div>
-            <div class="result">Artist 2</div>
-            <div class="result">Artist 3</div>
-            <div class="result">Artist 4</div>
-        </div>
-    <h2>Albums</h2> 
-        <div class="album-results">
-            <div class="result">Album 1</div>
-            <div class="result">Album 2</div>
-            <div class="result">Album 3</div>
-            <div class="result">Album 4</div>
-        </div>
 </div>
 
 <!--Play Button-->

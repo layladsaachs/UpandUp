@@ -140,4 +140,37 @@ def get_user_playlists():
 
     return simplified_playlists
 
+@router.get("/search")
+def user_search(q: str):
+    access_token = access_token_storage.get("access_token")
+
+    if not access_token:
+        return {"error": "User not authenitcated"}
+
+    search_url= "https://api.spotify.com/v1/search"
+
+    headers = {
+        "Authorization": f"Bearer {access_token}"
+    }
+
+    params = {
+        "q": q,
+        "type": "track",
+        "limit": 10
+    }
+
+    response = requests.get(search_url, headers=headers, params=params)
+    data = response.json()
+
+    results = []
+
+    for item in data.get("tracks", {}).get("items", []):
+        results.append({
+            "name": item.get("name"),
+            "artist": item.get("artists")[0]["name"],
+            "album": item.get("album")["name"]
+        })
+
+    return results
+
 
