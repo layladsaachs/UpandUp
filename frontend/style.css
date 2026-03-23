@@ -1,4 +1,11 @@
-/*--Music Player Design--*/
+/* 
+
+--Music Player Design-- 
+This section of code is dedicated to 
+design elements of the "Music Player"
+page of the website
+
+*/
 
 /*Global styling top to bottom*/
 body {
@@ -113,7 +120,14 @@ header button {
 }
 
 
-/*--Events Design--*/
+/* 
+
+--Events Design-- 
+This section of code is dedicated to 
+design elements of the "Live Events"
+page of the website
+
+*/
 
 .event-list{
     margin-bottom: 60px;
@@ -216,3 +230,42 @@ header button {
     transition: transform 0.3s ease;
 }
 
+/* 
+
+--Results Design-- 
+This section of code is dedicated to 
+design elements of the results page
+page of the website
+
+
+#search-results{
+    padding: 20px;
+    color: white;
+}
+
+#search-results h2{
+    margin: 20px 0px 10px;
+}
+
+.song-results{
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+}
+
+.artist-results{
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+}
+
+.card{
+    background: #171717;
+    border-radius: 8px;
+    height: 120px;
+}
+
+.artist-card{
+    height: 200px;
+}
+
+*/
