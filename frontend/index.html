@@ -3,6 +3,9 @@
 <head>
     <title>VYBE</title>
     <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="footer.css">
+    <link rel="stylesheet" href="cell.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
 </head>
 
 <body>
@@ -10,44 +13,131 @@
 <!--Show site name, search bar, events tab, music player tab, and profile + settings icons-->
 <header>
     <h1 class = "logo">
-        <img src = "title-logo2.jpg">
+        <img src = "images/title-logo1.jpg">
     </h1>
     <input type="text" placeholder="Search music & events!">
 
-    <button id="tab1Button" class="active-tab">Music Player</button>
-    <button id="tab2Button">Live Events</button>
+    <button id="tab1Button" class="active-tab button">Music Player</button>
+    <button id="tab2Button" class="button">Live Events</button>
 
     <div class="top-icons">
-        <img src="https://cdn-icons-png.flaticon.com/512/3524/3524636.png" />
-        <img src="https://cdn-icons-png.flaticon.com/512/149/149071.png" />
+        <button id="gear" title="Settings"><i class="fa-solid fa-gear"></i></button>
+        <button id ="person" title="Profile"><i class="fa-solid fa-user-circle"></i></button>
     </div>
 </header>
 
 <!--Music Player Tab Active-->
 <div id="tab1" class="screen active">
 
-    <!--Grid container for draggable boxes-->
     <div class="grid">
-        <div class="cell side" id="userLibrary" draggable="true">
-            <h3>User Library</h3>
+
+
+        <!--leftmost cell-->
+        <div class="cell left" id="userLibrary" draggable="true">
+            <div class="library-header">
+                <h3>Your music</h3>
+
+                <div class="library-icons">
+                    <button id="menuBtn"><i class="fa-solid fa-bars"></i></button>
+                    <button id="createPlaylistBtn"><i class="fa-solid fa-plus"></i></button>
+                </div>
+            </div>
+
+            <div class="library-filters">
+                <button class="filter-btn active" data-type="playlists">Playlists</button>
+                <button class="filter-btn" data-type="albums">Albums</button>
+                <button class="filter-btn" data-type="artists">Artists</button>
+            </div>
+
+            <input 
+                type="text" 
+                id="librarySearch" 
+                placeholder="Search"
+                class="library-search"
+            >
+
+            <div id="libraryList" class="library-list"></div>
         </div>
+        
+
+        <!--middle cell-->
         <div class="cell middle" id="results" draggable="true">
-    <h2>Search Results</h2>
+            <div class="section">
+                <h3>Popular</h3>
+                <div class="card-row" id="popularRow">
+                    <div class="card">Test</div>
+                    <div class="card">Test</div>
+                    <div class="card">Test</div>
+                    <div class="card">Test</div>
+                </div>
+            </div>
 
-    <!-- Trending EDM Artists -->
-    <div class="trending">
-        <h3>Trending EDM Artists</h3>
-        <ul>
-            <li>Illenium</li>
-            <li>Martin Garrix</li>
-            <li>Subtronics</li>
-            <li>Excision</li>
-        </ul>
-    </div>
+            <div class="section">
+                <h3>Recommendations</h3>
+                <div class="card-row" id="recommendRow">
+                    <div class="card">Test</div>
+                    <div class="card">Test</div>
+                    <div class="card">Test</div>
+                    <div class="card">Test</div>
+                </div>
+            </div>
 
-    <!-- Placeholder for search results -->
-</div>
-        <div class="cell side" draggable="true">Currently-Playing Song Infographic</div>
+            <div class="section">
+                <h3>Recently Played</h3>
+                <div class="card-row" id="recentRow">
+                    <div class="card">Test</div>
+                    <div class="card">Test</div>
+                    <div class="card">Test</div>
+                    <div class="card">Test</div>
+                </div>
+            </div>
+
+            <div class="section">
+                <h3>Favorite Songs</h3>
+                <div class="card-row" id="songRow">
+                    <div class="card">Test</div>
+                    <div class="card">Test</div>
+                    <div class="card">Test</div>
+                    <div class="card">Test</div>
+                </div>
+            </div>
+
+            <div class="section">
+                <h3>Favorite Artists</h3>
+                <div class="card-row" id="artistRow">
+                    <div class="card">Test</div>
+                    <div class="card">Test</div>
+                    <div class="card">Test</div>
+                    <div class="card">Test</div>
+                </div>
+            </div>
+
+            <div class="section">
+                <h3>Favorite Albums</h3>
+                <div class="card-row" id="albumRow">
+                    <div class="card">Test</div>
+                    <div class="card">Test</div>
+                    <div class="card">Test</div>
+                    <div class="card">Test</div>
+                </div>
+            </div>
+        </div>
+
+
+        <!--rightmost cell-->
+        <div class="cell right" draggable="true">
+            <div class="now-playing-image">
+                <img id="nowPlayingImg" src="" alt="Album">
+                <span id="nowPlayingFallback">image</span>
+            </div>
+
+            <div class="now-playing-info">
+                <div id="nowPlayingTitle">Song Name</div>
+                <div id="nowPlayingArtist">Artist Name</div>
+            </div>
+
+            </div>
+        </div>
     </div>
 
 </div>
@@ -67,7 +157,7 @@
                 <div class="event">Event 5</div>
                 <div class="event">Event 6</div>
                 <div class="event">Event 7</div>
-                <div class="event">Event 8</div>
+                <div class="event last">Event 8</div>
             </div>
 
             <button class="arrow right" data-track="eventsTrack">&#9654;</button>
@@ -87,7 +177,7 @@
                 <div class="event">Recommendation 5</div>
                 <div class="event">Recommendation 6</div>
                 <div class="event">Recommendation 7</div>
-                <div class="event">Recommendation 8</div>
+                <div class="event last">Recommendation 8</div>
             </div>
 
             <button class="arrow right" data-track="forYouTrack">&#9654;</button>
@@ -96,12 +186,61 @@
 
 </div>
 
+
 <!--Play Button-->
 <footer class="now-playing">
-    <button class="play">&#9654;</button>
+    <div class="player-left">
+        <div class="album-art">
+            <img id="albumArt" src="" alt="Album cover">
+            <span id="albumArtFallback">image</span>
+        </div>
+
+    <div class="track-meta">
+        <div id="songTitle" class="song-title">Song Name</div>
+        <div id="artistName" class="artist-name">Artist Name</div>
+    </div>
+  </div>
+
+  <div class="player-center">
+    <div class="player-controls">
+      <button class="player-btn small" id="loopBtn" title="Loop">
+        <i class="fa-solid fa-repeat"></i>
+      </button>
+
+      <button class="player-btn" id="prevBtn" title="Previous">
+        <i class="fa-solid fa-backward-step"></i>
+      </button>
+
+      <button class="player-btn play-btn" id="playPauseBtn" title="Play/Pause">
+        <i class="fa-solid fa-play" id="playPauseIcon"></i>
+      </button>
+
+      <button class="player-btn" id="nextBtn" title="Next">
+        <i class="fa-solid fa-forward-step"></i>
+      </button>
+
+      <button class="player-btn small" id="likeBtn" title="Like">
+        <i class="fa-regular fa-thumbs-up" id="likeIcon"></i>
+      </button>
+
+      <button class="player-btn small" id="queueBtn" title="Queue">
+        <i class="fa-solid fa-list-ul"></i>
+      </button>
+    </div>
+
+    <div class="progress-wrap">
+      <span id="currentTime">00:00</span>
+      <input type="range" id="progressBar" min="0" max="100" value="0">
+      <span id="duration">00:00</span>
+    </div>
+  </div>
+
+  <div class="player-right">
+    <i class="fa-solid fa-volume-high volume-icon"></i>
+    <input type="range" id="volumeSlider" min="0" max="100" value="70">
+  </div>
 </footer>
 
 <script src="script.js"></script>
 </body>
 </html>
-
