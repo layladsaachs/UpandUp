@@ -173,4 +173,30 @@ def user_search(q: str):
 
     return results
 
+@router.get("/albums")
+def get_user_albums():
+    access_token = access_token_storage.get("access")
 
+    if not access_token:
+        return {"error": "User not authenticated"}
+
+    url = "https://api.spotify.com/v1/me/albums"
+
+    headers = {
+        "Authorization": f"Bearer {access_token}"
+    }
+
+    res = requests.get(url, headers=headers)
+    data = res.json()
+
+    results = []
+
+    for item in data.get("items", []):
+        album = item.get("album")
+        results.append({
+            "name": album.get("name"),
+            "artist": album.get("artist")[0]["name"]
+        })
+
+    return results
+    
