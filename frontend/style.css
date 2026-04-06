@@ -1,4 +1,4 @@
-/* --Music Player Design-- */
+/* --Music Player Outline-- */
 
 /*Global styling top to bottom*/
 body {
@@ -39,12 +39,14 @@ header input {
     cursor: pointer;
 }
 
-.top-icons img {
-    width: 30px;
-    margin-left: 15px;
-    padding-bottom: 0px;
+.top-icons {
+    display: flex;
+    gap: 30px;
+    width: 50px;
+    height: 50px;
+    margin-left: -20px;
+    margin-right: 30px;
     cursor: pointer;
-    filter: invert(1);
 }
 
 header button {
@@ -72,18 +74,20 @@ header button {
 .grid {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
-    gap: 15px;
+    gap: 10px;
     justify-items: center;
     color: rgb(226, 108, 209);
 }
 
 /*Styling and dimensions for boxes*/
-.cell.side {
-    width: 360px;
-    height: 555px;
+.cell.left {
+    width: 380px;
+    height: 518px;
     border: 2px solid #c084fc;
     border-radius: 15px;
+    gap: 12px;
     display: flex;
+    flex-direction: column;
     align-items: center;
     justify-content: center;
     cursor: grab;
@@ -93,10 +97,27 @@ header button {
 
 .cell.middle {
     width: 700px;
-    height: 555px;
+    height: 518px;
+    gap: 30px;
     border: 2px solid #c084fc;
     border-radius: 15px;
     display: flex;
+    flex-direction: column;
+    align-items: center;
+    cursor: grab;
+    font-weight: bold;
+    transition: transform 0.3s ease;
+    overflow-y: auto;
+}
+
+.cell.right {
+    width: 380px;
+    height: 518px;
+    border: 2px solid #c084fc;
+    border-radius: 15px;
+    gap: 20px;
+    display: flex;
+    flex-direction: column;
     align-items: center;
     justify-content: center;
     cursor: grab;
@@ -107,16 +128,14 @@ header button {
 /*Styling for tab button*/
 /*Highlight button in dark gray to indicate current tab*/
 .active-tab {
-    background: rgb(0, 0, 0);
     color: rgb(226, 108, 209);
-    border-radius: 6px;
 }
 
 
-/* --Events Design-- */
+/* --Events Outline-- */
 
 .event-list{
-    margin-bottom: 60px;
+    margin-bottom: 40px;
 }
 
 .event-list h2{
@@ -156,6 +175,10 @@ header button {
     flex-shrink: 0;
 }
 
+.event.last{
+    margin-right: 21px;
+}
+
 .arrow{
     width: 60px;
     height: 60px;
@@ -169,49 +192,5 @@ header button {
 
 .arrow:hover{
     transform: scale(1.1);
-    transition: transform 0.3s ease;
-}
-
-
-/* Now-Playing Interface (Footer) */
-
-.now-playing{
-    background: #171717;
-    border-top: 3px solid #444;
-    display: flex;
-    text-align: center;
-    justify-content: center;
-}
-
-.play{
-    width: 60px;
-    height: 60px;
-    border-radius: 50%;
-    border: 3px solid #d16cff;
-    background: #171717;
-    color: #d16cff;
-    cursor: pointer;
-    font-size: 20px;
-}
-
-
-/* Trending Section */
-.trending {
-    background: #111;
-    border: 2px solid #c084fc;
-    border-radius: 10px;
-    padding: 10px;
-    margin-bottom: 15px;
-}
-
-.trending h3 {
-    color: #77fec0;
-}
-
-/* Hover animation for boxes and cards */
-.cell:hover,
-.artist-card:hover,
-.event-card:hover {
-    transform: scale(1.03);
     transition: transform 0.3s ease;
 }
