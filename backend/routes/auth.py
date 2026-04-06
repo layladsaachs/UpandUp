@@ -38,7 +38,7 @@ def login():
         "client_id": SPOTIFY_CLIENT_ID,
         "response_type": "code",
         "redirect_uri": SPOTIFY_REDIRECT_URI,
-        "scope": "user-read-email playlist-read-private",
+        "scope": "user-read-email playlist-read-private user-library-read user-follow-read",
         "show_dialog": "true"
     }
 
@@ -175,7 +175,7 @@ def user_search(q: str):
 
 @router.get("/albums")
 def get_user_albums():
-    access_token = access_token_storage.get("access")
+    access_token = access_token_storage.get("access_token")
 
     if not access_token:
         return {"error": "User not authenticated"}
@@ -195,8 +195,33 @@ def get_user_albums():
         album = item.get("album")
         results.append({
             "name": album.get("name"),
-            "artist": album.get("artist")[0]["name"]
+            "artist": album.get("artists")[0]["name"]
         })
 
     return results
-    
+
+
+@router.get("/artists")
+def get_user_artists():
+    access_token = access_token_storage.get("access_token")
+
+    if not access_token:
+        return {"error": "User not authenticated"}
+
+    url = "https://api.spotify.com/v1/me/following?type=artist"
+
+    headers = {
+        "Authorization": f"Bearer {access_token}"
+    }
+
+    res = requests.get(url, headers=headers)
+    data = res.json()
+
+    results = []
+
+    for artist in data.get("artists", {}).get("items", []):
+        results.append({
+            "name": artist.get("name")
+        })
+
+    return results
