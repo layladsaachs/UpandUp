@@ -1,0 +1,108 @@
+/* Dropdown base */
+.dropdown {
+  position: absolute;
+  top: 70px;
+  right: 20px;
+  width: 260px;
+  background: #2c2c2c;
+  border: 2px solid #aaa;
+  border-radius: 10px;
+  padding: 20px;
+  z-index: 1000;
+}
+
+.hidden {
+  display: none;
+}
+
+/* Inputs */
+.input-group {
+  margin-bottom: 15px;
+}
+
+.input-group label {
+  color: rgb(202,190,168);
+  font-weight: bold;
+}
+
+.input-group input {
+  width: 100%;
+  background: transparent;
+  border: none;
+  border-bottom: 2px solid #888;
+  color: white;
+  padding: 5px 0;
+}
+
+/* Username */
+#usernameInput {
+  width: 100%;
+  background: transparent;
+  border: none;
+  border-bottom: 2px solid #888;
+  color: white;
+  font-size: 18px;
+  margin-bottom: 20px;
+}
+
+/* Profile circle */
+.profile-pic {
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  border: 2px solid #aaa;
+  margin: 10px auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.profile-pic img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: none;
+}
+
+/* Toggle switch */
+.switch {
+  display: inline-block;
+  width: 50px;
+  height: 25px;
+  position: relative;
+  margin-bottom: 20px;
+}
+
+.switch input {
+  display: none;
+}
+
+.slider {
+  position: absolute;
+  background: #777;
+  border-radius: 25px;
+  width: 100%;
+  height: 100%;
+  cursor: pointer;
+}
+
+.slider::before {
+  content: "";
+  position: absolute;
+  width: 20px;
+  height: 20px;
+  background: white;
+  border-radius: 50%;
+  top: 2.5px;
+  left: 3px;
+  transition: 0.3s;
+}
+
+input:checked + .slider {
+  background: #4fa3d1;
+}
+
+input:checked + .slider::before {
+  transform: translateX(24px);
+}
