@@ -212,28 +212,40 @@ const filterButtons = document.querySelectorAll(".filter-btn");
 
 let currentFilter = "playlists";
 
-const libraryData = {
-  playlists: ["Liked", "Collection 1", "Collection 2"],
-  albums: ["Album A", "Album B"],
-  artists: ["Artist X", "Artist Y"]
-};
+async function fetchLibrary(type) {
+  try {
+    const res = await fetch(`http://127.0.0.1:8000/${type}`);
+    const data = await res.json();
 
-function renderLibrary() {
+    if (!Array.isArray(data)) {
+      console.error("Bad data:", data);
+      return [];
+    }
+
+    return data;
+  } catch (err) {
+    console.error("Fetch error:", err);
+    return [];
+  }
+}
+
+async function renderLibrary() {
   if (!libraryList) return;
 
   const query = searchInput?.value.toLowerCase() || "";
-  const items = libraryData[currentFilter];
+  const data = await fetchLibrary(currentFilter);
 
   libraryList.innerHTML = "";
 
-  items
-    .filter(i => i.toLowerCase().includes(query))
+  data
+    .filter(item => item.name.toLowerCase().includes(query))
     .forEach(item => {
       const div = document.createElement("div");
       div.className = "library-item";
+
       div.innerHTML = `
         <div class="library-item-img">image</div>
-        <div class="library-item-text">${item}</div>
+        <div class="library-item-text">${item.name}</div>
       `;
       libraryList.appendChild(div);
     });
