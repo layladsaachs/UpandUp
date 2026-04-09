@@ -14,7 +14,7 @@
 <!--Show site name, search bar, events tab, music player tab, and profile + settings icons-->
 <header>
     <h1 class = "logo">
-        <img src = "images/title-logo1.jpg">
+        <img src = "title-logo2.jpg">
     </h1>
     <input id="searchBar" type="text" placeholder="Search music & events!">
     <button id="searchButton">Search</button>
@@ -113,6 +113,54 @@
     </div>
 
 </div>
+
+<!-- SETTINGS MENU -->
+<div id="settingsMenu" class="dropdown hidden">
+  <h3>Dark Mode</h3>
+  <label class="switch">
+    <input type="checkbox" id="darkToggle" checked>
+    <span class="slider"></span>
+  </label>
+
+  <h3>Location Preferences</h3>
+
+  <div class="input-group">
+    <label>City</label>
+    <input type="text" placeholder="enter city">
+  </div>
+
+  <div class="input-group">
+    <label>State</label>
+    <input type="text" placeholder="enter state">
+  </div>
+
+  <div class="input-group">
+    <label>Zip Code</label>
+    <input type="text" placeholder="enter zip code">
+  </div>
+</div>
+
+
+<!-- PROFILE MENU -->
+<div id="profileMenu" class="dropdown hidden">
+
+  <input 
+    type="text" 
+    id="usernameInput" 
+    placeholder="Username"
+  >
+
+  <div class="profile-pic">
+    <img id="profileImage" src="">
+    <span id="profileFallback">
+        <i class="fa-solid fa-user-circle"></i>
+    </span>
+  </div>
+
+  <input type="file" id="imageUpload" accept="image/*">
+
+</div>
+
 
 <!--Events Tab Active-->
 <div id="tab2" class="screen">

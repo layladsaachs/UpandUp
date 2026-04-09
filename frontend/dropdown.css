@@ -4,6 +4,7 @@
   top: 70px;
   right: 20px;
   width: 260px;
+  color: #a3a3a3;
   background: #2c2c2c;
   border: 2px solid #aaa;
   border-radius: 10px;
@@ -38,9 +39,10 @@
 #usernameInput {
   width: 100%;
   background: transparent;
+  font-weight: bold;
   border: none;
   border-bottom: 2px solid #888;
-  color: white;
+  color: #a3a3a3;
   font-size: 18px;
   margin-bottom: 20px;
 }
@@ -50,6 +52,7 @@
   width: 120px;
   height: 120px;
   border-radius: 50%;
+  background: #000;
   border: 2px solid #aaa;
   margin: 10px auto;
   display: flex;

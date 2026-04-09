@@ -263,25 +263,19 @@
   color: rgb(202, 190, 168);
   font-size: 24px;
   font-weight: bold;
-
   max-width: 300px;
-
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-
   margin: 0 auto;
 }
 
 #nowPlayingArtist {
   color: rgb(202, 190, 168);
   font-size: 14px;
-
   max-width: 300px;
-
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-
   margin: 5px auto 0;
 }
