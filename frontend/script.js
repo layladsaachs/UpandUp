@@ -261,48 +261,54 @@ searchBar.addEventListener("keypress", (e) => {
   }
 });
 
+
 //
 // Song search results
 //
 function renderSongs(tracks) {
- const container = document.getElementById("songsResults");
- if (!container) return;
+  const container = document.getElementById("songsResults");
+  if (!container) return;
 
- container.innerHTML = "";
+  container.innerHTML = "";
 
- tracks.forEach(track => {
-  const card = document.createElement("div");
-  card.className = "card";
+  tracks.forEach((track, index) => {
+    const card = document.createElement("div");
+    card.className = "card";
+    card.dataset.index = index;
 
-  card.innerHTML = `
-    <div class="card-img">
-      ${track.image 
-        ? `<img src="${track.image}">`
-        : "image"}
-    </div>
-    <div class="card-title">${track.name}</div>
-    <div class="card-subtitle">${track.artist}</div>
-  `;
+    card.innerHTML = `
+      <div class="card-img">
+        ${track.image ? `<img src="${track.image}">` : "image"}
+      </div>
+      <div class="card-title">${track.name}</div>
+      <div class="card-subtitle">${track.artist}</div>
+    `;
 
-  card.addEventListener("click", () => {
-   if (track.preview) {
-    audio.src = track.preview;
-    audio.play();
-   }
-
-   queue = [{
-    title: track.name,
-    artist: track.artist,
-    duration: track.duration,
-    image: track.image
-   }];
-
-   currentIndex = 0;
-   loadTrack(currentIndex);
+    container.appendChild(card);
   });
 
-  container.appendChild(card);
- });
+  container.onclick = (e) => {
+    const clickedCard = e.target.closest(".card");
+    if (!clickedCard) return;
+
+    const index = clickedCard.dataset.index;
+    const track = tracks[index];
+
+    if (track.preview) {
+      audio.src = track.preview;
+      audio.play();
+    }
+
+    queue = [{
+      title: track.name,
+      artist: track.artist,
+      duration: track.duration,
+      image: track.image
+    }];
+
+    currentIndex = 0;
+    loadTrack(currentIndex);
+  };
 }
 
 //
@@ -369,7 +375,7 @@ function renderEvents(events) {
 
   card.innerHTML = `
    <div>
-    <img src="{album.image}" style="width: 100%; height: 100%; object-fit:cover;">
+    <img src="${event.image}" style="width: 100%; height: 100%; object-fit:cover;">
    </div>
    <div>${event.name}</div>
    <div>${event.artist}</div>
@@ -519,22 +525,34 @@ async function renderLibrary() {
 
   libraryList.innerHTML = "";
 
-  data
-    .filter(item => item.name.toLowerCase().includes(query))
-    .forEach(item => {
-      const div = document.createElement("div");
-      div.className = "library-item";
+  // Filter first
+  let filtered = data.filter(item =>
+    item.name.toLowerCase().includes(query)
+  );
 
-      div.innerHTML = `
-        <div class="library-item-img">
-          ${item.image
-            ? `<img src="${item.image}" style="width:100%; height:100%; object-fit:cover;">`
-            : "image"}
-            </div>
-            <div class="library-item-text">${item.name}</div>
-      `;
-      libraryList.appendChild(div);
-    });
+  // Apply sorting
+  if (currentSort === "alpha") {
+    filtered.sort((a, b) => a.name.localeCompare(b.name));
+  } else if (currentSort === "added") {
+    filtered.reverse();
+  }
+
+  // Render
+  filtered.forEach(item => {
+    const div = document.createElement("div");
+    div.className = "library-item";
+
+    div.innerHTML = `
+      <div class="library-item-img">
+        ${item.image
+          ? `<img src="${item.image}" style="width:100%; height:100%; object-fit:cover;">`
+          : "image"}
+      </div>
+      <div class="library-item-text">${item.name}</div>
+    `;
+
+    libraryList.appendChild(div);
+  });
 }
 
 filterButtons.forEach(btn => {
@@ -629,5 +647,37 @@ if (gear && person && settingsMenu && profileMenu) {
  }
 });
 }
+
+//
+// Filter Dropdown
+const menuBtn = document.getElementById("menuBtn");
+const sortMenu = document.getElementById("sortMenu");
+
+if (menuBtn && sortMenu) {
+  menuBtn.addEventListener("click", (e) => {
+    e.stopPropagation();
+    sortMenu.classList.toggle("hidden");
+  });
+
+  document.addEventListener("click", (e) => {
+    if (!sortMenu.contains(e.target) && !menuBtn.contains(e.target)) {
+      sortMenu.classList.add("hidden");
+    }
+  });
+}
+
+const sortOptions = document.querySelectorAll(".sort-option");
+let currentSort = "recent";
+
+sortOptions.forEach(option => {
+  option.addEventListener("click", () => {
+    sortOptions.forEach(o => o.classList.remove("active"));
+    option.classList.add("active");
+
+    currentSort = option.dataset.sort;
+
+    renderLibrary(); 
+  });
+});
 
 });

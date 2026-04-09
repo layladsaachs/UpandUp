@@ -109,3 +109,23 @@ input:checked + .slider {
 input:checked + .slider::before {
   transform: translateX(24px);
 }
+
+/* .sort for the filter dropdown menu*/
+.sort-option {
+  padding: 8px 0;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+.sort-option:hover {
+  color: rgb(226, 108, 209);
+}
+
+.sort-option.active {
+  color: rgb(226, 108, 209);
+}
+
+#sortMenu{
+  left: 270px;
+  top: 160px;
+}
