@@ -119,9 +119,17 @@ function renderSearchResults(tracks) {
     div.className = "card";
 
     div.innerHTML = `
-    <div>${track.name}</div>
-    <div style="font-size:12px;">${track.artist}</div>
-    <div style="font-size:10px;">${track.album}</div>
+    <div class="search-card">
+      <img src="${track.image}" class="search-img" />
+
+      <div class="search-info">
+        <div class="search-title">${track.name}</div>
+        <div class="search-artist">${track.artist}</div>
+        <div class="search-album">${track.album}</div>
+      </div>
+
+      <div class="search-duration">${formatTime(track.duration)}</div>
+    </div>
     `;
 
     div.style.padding = "10px";
@@ -132,8 +140,8 @@ function renderSearchResults(tracks) {
       queue = [{
         title: track.name,
         artist: track.artist,
-        duration: 180,
-        image: ""
+        duration: track.duration,
+        image: track.image
       }];
 
       currentIndex = 0;
@@ -194,6 +202,8 @@ function loadTrack(i) {
   const t = queue[i];
   if (!t) return;
 
+  currentSeconds = 0;
+
   songTitle.textContent = t.title;
   artistName.textContent = t.artist;
   durationEl.textContent = formatTime(t.duration);
@@ -207,6 +217,8 @@ function loadTrack(i) {
     albumArt.style.display = "none";
     albumArtFallback.style.display = "block";
   }
+
+  updateNowPlaying(t);
 }
 
 function play() {

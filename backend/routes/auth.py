@@ -167,10 +167,13 @@ def user_search(q: str):
     results = []
 
     for item in data.get("tracks", {}).get("items", []):
+        images = item.get("album", {}).get("images", [])
         results.append({
             "name": item.get("name"),
             "artist": item.get("artists")[0]["name"],
-            "album": item.get("album")["name"]
+            "album": item.get("album")["name"],
+            "image": images[0]["url"] if images else None,
+            "duration": item.get("duration_ms") // 1000
         })
 
     return results
