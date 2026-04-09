@@ -244,8 +244,12 @@ async function renderLibrary() {
       div.className = "library-item";
 
       div.innerHTML = `
-        <div class="library-item-img">image</div>
-        <div class="library-item-text">${item.name}</div>
+        <div class="library-item-img">
+          ${item.image
+            ? `<img src="${item.image}" style="width:100%; height:100%; object-fit:cover;">`
+            : "image"}
+            </div>
+            <div class="library-item-text">${item.name}</div>
       `;
       libraryList.appendChild(div);
     });

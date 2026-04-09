@@ -130,12 +130,14 @@ def get_user_playlists():
     simplified_playlists = []
 
     for playlist in playlists_data.get("items", []):
-        tracks_info = playlist.get("items")
+        images = playlist.get("images", [])
 
         simplified_playlists.append({
             "name": playlist.get("name"),
             "id": playlist.get("id"),
-            "tracks_total": tracks_info["total"] if  tracks_info else 0
+            "tracks_total": playlist.get("tracks", {}).get("total, 0"),
+            "image": images[0]["url"] if images else None
+
         })
 
     return simplified_playlists
@@ -195,7 +197,8 @@ def get_user_albums():
         album = item.get("album")
         results.append({
             "name": album.get("name"),
-            "artist": album.get("artists")[0]["name"]
+            "artist": album.get("artists")[0]["name"],
+            "image": album.get("images")[0]["url"] if album.get("images") else None
         })
 
     return results
@@ -221,7 +224,8 @@ def get_user_artists():
 
     for artist in data.get("artists", {}).get("items", []):
         results.append({
-            "name": artist.get("name")
+            "name": artist.get("name"),
+            "image": artist.get("images")[0]["url"] if artist.get("images") else None
         })
 
     return results
