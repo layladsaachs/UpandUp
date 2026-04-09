@@ -94,73 +94,165 @@ const searchBar = document.getElementById("searchBar");
 if (searchButton && searchBar) {
   searchButton.addEventListener("click", async () => {
     const query = searchBar.value.trim();
-    
     if (!query) return;
 
     try {
       const res = await fetch(`http://127.0.0.1:8000/search?q=${query}`);
       const data = await res.json();
 
-      console.log("Search results:", data);
-
-      renderSearchResults(data);
-
-    } catch (err) {
-      console.error("Search error:", err);
-    }
-  });
-}
-
-function renderSearchResults(tracks) {
-  const resultsDiv = document.getElementById("results");
-
-  resultsDiv.innerHTML = "<h2> Search Results</h2>";
-
-  tracks.forEach(track => {
-    const div = document.createElement("div");
-    div.className = "card";
-
-    div.innerHTML = `
-    <div class="search-card">
-      <img src="${track.image}" class="search-img" />
-
-      <div class="search-info">
-        <div class="search-title">${track.name}</div>
-        <div class="search-artist">${track.artist}</div>
-        <div class="search-album">${track.album}</div>
-      </div>
-
-      <div class="search-duration">${formatTime(track.duration)}</div>
-    </div>
-    `;
-
-    div.style.padding = "10px";
-    div.style.marginBottom = "10px";
-    div.style.width = "300px";
-
-    div.addEventListener("click", () => {
-      if (track.preview) {
-        audio.src = track.preview;
-        audio.play();
+      // If backend only returns tracks (for now)
+      if (Array.isArray(data)) {
+      renderSearchResults({
+        tracks: data,
+        artists: [],
+        albums: [],
+        events: []
+      });
       } else {
-        console.log("No preview for this track");
+      // full response (later)
+      renderSearchResults(data);
       }
 
-      queue = [{
-        title: track.name,
-        artist: track.artist,
-        duration: track.duration,
-        image: track.image
-      }];
+    } catch (err) {
+      console.warn("Backend failed → using mock data");
 
-      currentIndex = 0;
-      currentSeconds = 0;
-
-      loadTrack(currentIndex);
+      // test data (DELETE LATER)
+      renderSearchResults({
+      tracks: [
+        {
+          name: "Test Song",
+          artist: "Test Artist",
+          album: "Test Album",
+          image: "image",
+          duration: 200,
+          preview: ""
+        },
+        {
+          name: "Test Song",
+          artist: "Test Artist",
+          album: "Test Album",
+          image: "image",
+          duration: 200,
+          preview: ""
+        },
+        {
+          name: "Test Song",
+          artist: "Test Artist",
+          album: "Test Album",
+          image: "image",
+          duration: 200,
+          preview: ""
+        },
+        {
+          name: "Test Song",
+          artist: "Test Artist",
+          album: "Test Album",
+          image: "image",
+          duration: 200,
+          preview: ""
+        },
+      ],
+      artists: [
+        {
+          name: "Test Artist",
+          image: "image"
+        },
+        {
+          name: "Test Artist",
+          image: "image"
+        },
+        {
+          name: "Test Artist",
+          image: "image"
+        },
+        {
+          name: "Test Artist",
+          image: "image"
+        }
+      ],
+      albums: [
+        {
+          name: "Test Album",
+          artist: "Test Artist",
+          image: "image"
+        },
+        {
+          name: "Test Album",
+          artist: "Test Artist",
+          image: "image"
+        },
+        {
+          name: "Test Album",
+          artist: "Test Artist",
+          image: "image"
+        },
+        {
+          name: "Test Album",
+          artist: "Test Artist",
+          image: "image"
+        },
+      ],
+      events: [
+        {
+          name: "Test Concert",
+          artist: "Test Artist",
+          date: "05/01/2026",
+          time: "7:00 PM"
+        },
+        {
+          name: "Test Concert",
+          artist: "Test Artist",
+          date: "05/02/2026",
+          time: "7:00 PM"
+        },
+        {
+          name: "Test Concert",
+          artist: "Test Artist",
+          date: "05/03/2026",
+          time: "7:00 PM"
+        },
+        {
+          name: "Test Concert",
+          artist: "Test Artist",
+          date: "05/04/2026",
+          time: "7:00 PM"
+        }
+      ]
+      });
+    }
     });
+}
 
-    resultsDiv.appendChild(div);
-  });
+function renderSearchResults(data) {
+ const resultsDiv = document.getElementById("results");
+ if (!resultsDiv) return;
+
+ resultsDiv.innerHTML = `
+  <div class="section">
+   <h3>Songs</h3>
+   <div class="card-row" id="songsResults"></div>
+  </div>
+
+  <div class="section">
+   <h3>Artists</h3>
+   <div class="card-row" id="artistsResults"></div>
+  </div>
+
+  <div class="section">
+   <h3>Albums</h3>
+   <div class="card-row" id="albumsResults"></div>
+  </div>
+
+  <div class="section">
+   <h3>Events</h3>
+   <div class="card-row" id="eventsResults"></div>
+  </div>
+ `;
+
+ renderSongs(data.tracks || data);
+ renderArtists(data.artists || []);
+ renderAlbums(data.albums || []);
+ renderEvents(data.events || []);
 }
 
 searchBar.addEventListener("keypress", (e) => {
@@ -168,6 +260,127 @@ searchBar.addEventListener("keypress", (e) => {
     searchButton.click();
   }
 });
+
+//
+// Song search results
+//
+function renderSongs(tracks) {
+ const container = document.getElementById("songsResults");
+ if (!container) return;
+
+ container.innerHTML = "";
+
+ tracks.forEach(track => {
+  const card = document.createElement("div");
+  card.className = "card";
+
+  card.innerHTML = `
+    <div class="card-img">
+      ${track.image 
+        ? `<img src="${track.image}">`
+        : "image"}
+    </div>
+    <div class="card-title">${track.name}</div>
+    <div class="card-subtitle">${track.artist}</div>
+  `;
+
+  card.addEventListener("click", () => {
+   if (track.preview) {
+    audio.src = track.preview;
+    audio.play();
+   }
+
+   queue = [{
+    title: track.name,
+    artist: track.artist,
+    duration: track.duration,
+    image: track.image
+   }];
+
+   currentIndex = 0;
+   loadTrack(currentIndex);
+  });
+
+  container.appendChild(card);
+ });
+}
+
+//
+// Artists search results
+//
+function renderArtists(artists) {
+ const container = document.getElementById("artistsResults");
+ if (!container) return;
+
+ container.innerHTML = "";
+
+ artists.forEach(artist => {
+  const card = document.createElement("div");
+  card.className = "card";
+
+  card.innerHTML = `
+   <div>
+    <img src="${artist.image}" style="width:100%; height:100%; object-fit:cover;">
+   </div>
+   <div>${artist.name}</div>
+  `;
+
+  container.appendChild(card);
+ });
+}
+
+//
+// Albums search results
+//
+function renderAlbums(albums) {
+ const container = document.getElementById("albumsResults");
+ if (!container) return;
+
+ container.innerHTML = "";
+
+ albums.forEach(album => {
+  const card = document.createElement("div");
+  card.className = "card";
+
+  card.innerHTML = `
+   <div>
+    <img src="${album.image}" style="width:100%; height:100%; object-fit:cover;">
+   </div>
+   <div>${album.name}</div>
+   <div>${album.artist}</div>
+  `;
+
+  container.appendChild(card);
+ });
+}
+
+//
+// Events search results
+//
+function renderEvents(events) {
+ const container = document.getElementById("eventsResults");
+ if (!container) return;
+
+ container.innerHTML = "";
+
+ events.forEach(event => {
+  const card = document.createElement("div");
+  card.className = "card";
+
+  card.innerHTML = `
+   <div>
+    <img src="{album.image}" style="width: 100%; height: 100%; object-fit:cover;">
+   </div>
+   <div>${event.name}</div>
+   <div>${event.artist}</div>
+   <div>${event.date}</div>
+   <div>${event.time}</div>
+  `;
+
+  container.appendChild(card);
+ });
+}
+
 
 //
 // PLAYER
@@ -351,7 +564,6 @@ function renderRow(id, items) {
     container.appendChild(card);
   });
 }
-
 
 renderRow("popularRow", ["Song 1", "Song 2", "Song 3", "Song 4"]);
 renderRow("recommendRow", ["Rec 1", "Rec 2", "Rec 3", "Rec 4"]);
