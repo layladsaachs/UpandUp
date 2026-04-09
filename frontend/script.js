@@ -128,6 +128,20 @@ function renderSearchResults(tracks) {
     div.style.marginBottom = "10px";
     div.style.width = "300px";
 
+    div.addEventListener("click", () => {
+      queue = [{
+        title: track.name,
+        artist: track.artist,
+        duration: 180,
+        image: ""
+      }];
+
+      currentIndex = 0;
+      currentSeconds = 0;
+
+      loadTrack(currentIndex);
+    });
+
     resultsDiv.appendChild(div);
   });
 }
