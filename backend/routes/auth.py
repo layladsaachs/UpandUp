@@ -173,6 +173,7 @@ def user_search(q: str):
             "artist": item.get("artists")[0]["name"],
             "album": item.get("album")["name"],
             "image": images[0]["url"] if images else None,
+            "preview": item.get("preview_url"),
             "duration": item.get("duration_ms") // 1000
         })
 

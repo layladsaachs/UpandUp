@@ -1,3 +1,5 @@
+let audio = new Audio();
+
 document.addEventListener("DOMContentLoaded", () => {
 
 //
@@ -137,6 +139,13 @@ function renderSearchResults(tracks) {
     div.style.width = "300px";
 
     div.addEventListener("click", () => {
+      if (track.preview) {
+        audio.src = track.preview;
+        audio.play();
+      } else {
+        console.log("No preview for this track");
+      }
+
       queue = [{
         title: track.name,
         artist: track.artist,
