@@ -90,19 +90,53 @@ const searchButton = document.getElementById("searchButton");
 const searchBar = document.getElementById("searchBar");
 
 if (searchButton && searchBar) {
-  searchButton.addEventListener("click", () => {
-    const query = searchBar.value;
-    console.log("User searched for:", query);
+  searchButton.addEventListener("click", async () => {
+    const query = searchBar.value.trim();
+    
+    if (!query) return;
 
-    const resultsDiv = document.getElementById("results");
-    if (resultsDiv) {
-      resultsDiv.innerHTML = `
-        <h2>Search Results</h2>
-        <p>Searching for: ${query}</p>
-      `;
+    try {
+      const res = await fetch(`http://127.0.0.1:8000/search?q=${query}`);
+      const data = await res.json();
+
+      console.log("Search results:", data);
+
+      renderSearchResults(data);
+
+    } catch (err) {
+      console.error("Search error:", err);
     }
   });
 }
+
+function renderSearchResults(tracks) {
+  const resultsDiv = document.getElementById("results");
+
+  resultsDiv.innerHTML = "<h2> Search Results</h2>";
+
+  tracks.forEach(track => {
+    const div = document.createElement("div");
+    div.className = "card";
+
+    div.innerHTML = `
+    <div>${track.name}</div>
+    <div style="font-size:12px;">${track.artist}</div>
+    <div style="font-size:10px;">${track.album}</div>
+    `;
+
+    div.style.padding = "10px";
+    div.style.marginBottom = "10px";
+    div.style.width = "300px";
+
+    resultsDiv.appendChild(div);
+  });
+}
+
+searchBar.addEventListener("keypress", (e) => {
+  if (e.key === "Enter") {
+    searchButton.click();
+  }
+});
 
 //
 // PLAYER
@@ -323,7 +357,7 @@ const person = document.getElementById("person");
 const settingsMenu = document.getElementById("settingsMenu");
 const profileMenu = document.getElementById("profileMenu");
 
-if (gear && person) {
+if (gear && person && settingsMenu && profileMenu) {
   gear.addEventListener("click", (e) => {
     e.stopPropagation();
     settingsMenu.classList.toggle("hidden");
