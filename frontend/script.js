@@ -405,10 +405,17 @@ if (gear && person && settingsMenu && profileMenu) {
     settingsMenu.classList.add("hidden");
   });
 
-  document.addEventListener("click", () => {
-    settingsMenu.classList.add("hidden");
-    profileMenu.classList.add("hidden");
-  });
+  document.addEventListener("click", (e) => {
+ // If click is NOT inside settings menu or gear button → close it
+ if (!settingsMenu.contains(e.target) && !gear.contains(e.target)) {
+  settingsMenu.classList.add("hidden");
+ }
+
+ // If click is NOT inside profile menu or person button → close it
+ if (!profileMenu.contains(e.target) && !person.contains(e.target)) {
+  profileMenu.classList.add("hidden");
+ }
+});
 }
 
 });
