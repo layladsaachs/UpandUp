@@ -427,6 +427,7 @@ function formatTime(s) {
 }
 
 function loadTrack(i) {
+  renderQueue();
   const t = queue[i];
   if (!t) return;
 
@@ -679,5 +680,60 @@ sortOptions.forEach(option => {
     renderLibrary(); 
   });
 });
+
+//
+// Queueu Dropdown menu
+const queueBtn = document.getElementById("queueBtn");
+const queueMenu = document.getElementById("queueMenu");
+
+if (queueBtn && queueMenu) {
+  queueBtn.addEventListener("click", (e) => {
+    e.stopPropagation();
+    queueMenu.classList.toggle("hidden");
+  });
+
+  document.addEventListener("click", (e) => {
+    if (!queueMenu.contains(e.target) && !queueBtn.contains(e.target)) {
+      queueMenu.classList.add("hidden");
+    }
+  });
+}
+
+function renderQueue() {
+  const currentDiv = document.getElementById("currentTrack");
+  const queueDiv = document.getElementById("queueList");
+
+  if (!currentDiv || !queueDiv) return;
+
+  currentDiv.innerHTML = "";
+  queueDiv.innerHTML = "";
+
+  const current = queue[currentIndex];
+
+  // Current
+  if (current) {
+    currentDiv.innerHTML = `
+      <div class="queue-item">
+        <div>${current.title}</div>
+        <div style="font-size:12px;color:#aaa;">${current.artist}</div>
+      </div>
+    `;
+  }
+
+  // Next Limit = 5
+  const nextTracks = queue.slice(currentIndex + 1, currentIndex + 6);
+
+  nextTracks.forEach(track => {
+    const div = document.createElement("div");
+    div.className = "queue-item";
+
+    div.innerHTML = `
+      <div>${track.title}</div>
+      <div style="font-size:12px;color:#aaa;">${track.artist}</div>
+    `;
+
+    queueDiv.appendChild(div);
+  });
+}
 
 });

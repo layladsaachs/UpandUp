@@ -129,3 +129,14 @@ input:checked + .slider::before {
   left: 270px;
   top: 160px;
 }
+
+
+
+/* queue for the queue dropdown menu*/
+
+#queueMenu {
+  top: auto;
+  bottom: 100px;
+  right: 330px;
+  width: 260px;
+}
