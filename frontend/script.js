@@ -223,6 +223,94 @@ if (searchButton && searchBar) {
     });
 }
 
+//
+// Search suggestions
+//
+const suggestionsBox = document.getElementById("searchSuggestions");
+
+searchBar.addEventListener("input", async () => {
+  const query = searchBar.value.trim();
+
+  if (!query) {
+    suggestionsBox.classList.add("hidden");
+    return;
+  }
+
+  try {
+    const res = await fetch(`http://127.0.0.1:8000/search?q=${query}`);
+    const data = await res.json();
+
+    renderSuggestions(data);
+    suggestionsBox.classList.remove("hidden");
+
+  } catch (err) {
+    console.warn("Suggestions fallback");
+
+    renderSuggestions({
+      tracks: [{ name: "Song Name", artist: "Artist" }],
+      artists: [{ name: "Artist Name" }],
+      albums: [{ name: "Album Name", artist: "Artist" }],
+      events: [{ name: "Event Name", date: "MM/DD/YYYY", time: "Time" }]
+    });
+
+    suggestionsBox.classList.remove("hidden");
+  }
+});
+
+function renderSuggestions(data) {
+  suggestionsBox.innerHTML = "";
+
+  const items = [
+    ...(data.tracks || []),
+    ...(data.artists || []),
+    ...(data.albums || []),
+    ...(data.events || [])
+  ];
+
+  items.slice(0, 6).forEach(item => {
+    const div = document.createElement("div");
+    div.className = "suggestion-item";
+
+    div.innerHTML = `
+      <div class="suggestion-img">img</div>
+      <div class="suggestion-text">
+        <div class="suggestion-title">${item.name}</div>
+        <div class="suggestion-sub">
+          ${item.artist || ""}
+          ${item.date ? `<br>${item.date} ${item.time}` : ""}
+        </div>
+      </div>
+    `;
+
+    div.addEventListener("click", () => {
+      suggestionsBox.classList.add("hidden");
+
+      if (item.date) {
+        // EVENT → go to event page
+        showEventPage(item);
+      } else {
+        // MUSIC → trigger search
+        searchBar.value = item.name;
+        searchButton.click();
+      }
+    });
+
+    suggestionsBox.appendChild(div);
+  });
+}
+
+document.addEventListener("click", (e) => {
+  if (
+    !suggestionsBox.contains(e.target) &&
+    !searchBar.contains(e.target)
+  ) {
+    suggestionsBox.classList.add("hidden");
+  }
+});
+
+//
+// ACTUAL SEARCH RESULTS
+//
 function renderSearchResults(data) {
  const resultsDiv = document.getElementById("results");
  if (!resultsDiv) return;
@@ -257,10 +345,10 @@ function renderSearchResults(data) {
 
 searchBar.addEventListener("keypress", (e) => {
   if (e.key === "Enter") {
+    suggestionsBox.classList.add("hidden");
     searchButton.click();
   }
 });
-
 
 //
 // Song search results
@@ -735,5 +823,57 @@ function renderQueue() {
     queueDiv.appendChild(div);
   });
 }
+
+//
+// LIVE EVENTS INDIVIDUAL RESULTS
+//
+function showEventPage(event) {
+  const tab1 = document.getElementById("tab1");
+  const tab2 = document.getElementById("tab2");
+  const tab1Button = document.getElementById("tab1Button");
+  const tab2Button = document.getElementById("tab2Button");
+
+  const mainContent = document.getElementById("eventsMainContent");
+  const container = document.getElementById("eventDetailContainer");
+
+  tab2.classList.add("active");
+  tab1.classList.remove("active");
+
+  tab2Button.classList.add("active-tab");
+  tab1Button.classList.remove("active-tab");
+
+  // Hide carousel
+  mainContent.style.display = "none";
+
+  // Show specific event 
+  container.innerHTML = `
+    <button id="backToEvents">← Back</button>
+
+    <div class="card-wrapper">
+      <div class="event-card-large">
+        <div class="event-image">image</div>
+        <div class="main-card">
+          <h2>${event.date}</h2>
+          <h3>${event.time}</h3>
+          <h1>${event.name}</h1>
+          <h3>Venue</h3>
+          <h3>City, State</h3>
+          <button>View on Ticketmaster</button>
+        </div>
+      </div>
+    </div>
+  `;
+
+  // Backtrack
+  document.getElementById("backToEvents").onclick = () => {
+  container.innerHTML = "";
+  mainContent.style.display = "block";
+};
+}
+
+document.getElementById("backToEvents").onclick = () => {
+  container.innerHTML = "";
+  mainContent.style.display = "block";
+};
 
 });

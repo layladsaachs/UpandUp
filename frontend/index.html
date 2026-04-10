@@ -17,7 +17,8 @@
         <img src = "title-logo2.jpg">
     </h1>
     <input id="searchBar" type="text" placeholder="Search music & events!">
-    <button id="searchButton">Search</button>
+    <div id="searchSuggestions" class="dropdown hidden"></div>
+    <button id="searchButton"><i class="fa-solid fa-search"></i></button>
 
     <button id="tab1Button" class="active-tab button">Music Player</button>
     <button id="tab2Button" class="button">Live Events</button>
@@ -180,46 +181,48 @@
 
 <!--Events Tab Active-->
 <div id="tab2" class="screen">
-    <section class="event-list">
-        <h2>Events</h2>
-        <div class="carousel-mechanism">
-            <button class="arrow left" data-track="eventsTrack">&#9664;</button>
+    <div id="eventsMainContent">
+        <section class="event-list">
+            <h2>Events</h2>
+                <div class="carousel-mechanism">
+                    <button class="arrow left" data-track="eventsTrack">&#9664;</button>
 
-            <div class="carousel-track" id="eventsTrack">
-                <div class="event">Event 1</div>
-                <div class="event">Event 2</div>
-                <div class="event">Event 3</div>
-                <div class="event">Event 4</div>
-                <div class="event">Event 5</div>
-                <div class="event">Event 6</div>
-                <div class="event">Event 7</div>
-                <div class="event last">Event 8</div>
+                    <div class="carousel-track" id="eventsTrack">
+                        <div class="event">Event 1</div>
+                        <div class="event">Event 2</div>
+                        <div class="event">Event 3</div>
+                        <div class="event">Event 4</div>
+                        <div class="event">Event 5</div>
+                        <div class="event">Event 6</div>
+                        <div class="event">Event 7</div>
+                        <div class="event last">Event 8</div>
+                    </div>
+
+                    <button class="arrow right" data-track="eventsTrack">&#9654;</button>
+                </div>
+        </section>
+
+        <section class="event-list">
+            <h2>For You</h2>   
+            <div class="carousel-mechanism">
+                <button class="arrow left" data-track="forYouTrack">&#9664;</button>
+
+                <div class="carousel-track" id="forYouTrack">
+                    <div class="event">Recommendation 1</div>
+                    <div class="event">Recommendation 2</div>
+                    <div class="event">Recommendation 3</div>
+                    <div class="event">Recommendation 4</div>
+                    <div class="event">Recommendation 5</div>
+                    <div class="event">Recommendation 6</div>
+                    <div class="event">Recommendation 7</div>
+                    <div class="event last">Recommendation 8</div>
+                </div>
+
+                <button class="arrow right" data-track="forYouTrack">&#9654;</button>
             </div>
-
-            <button class="arrow right" data-track="eventsTrack">&#9654;</button>
-        </div>
-    </section>
-
-    <section class="event-list">
-        <h2>For You</h2>   
-        <div class="carousel-mechanism">
-            <button class="arrow left" data-track="forYouTrack">&#9664;</button>
-
-            <div class="carousel-track" id="forYouTrack">
-                <div class="event">Recommendation 1</div>
-                <div class="event">Recommendation 2</div>
-                <div class="event">Recommendation 3</div>
-                <div class="event">Recommendation 4</div>
-                <div class="event">Recommendation 5</div>
-                <div class="event">Recommendation 6</div>
-                <div class="event">Recommendation 7</div>
-                <div class="event last">Recommendation 8</div>
-            </div>
-
-            <button class="arrow right" data-track="forYouTrack">&#9654;</button>
-        </div>
-    </section>
-
+        </section>
+    </div>
+    <div id="eventDetailContainer"></div>
 </div>
 
 

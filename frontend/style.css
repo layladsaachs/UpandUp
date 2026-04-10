@@ -16,6 +16,91 @@ header {
     border-bottom: 3px solid rgb(19, 19, 18);
 }
 
+#searchButton{
+    margin-left: -40px;
+}
+
+#searchSuggestions {
+  position: absolute;
+  top: 70px;       
+  left: 40%;
+  transform: translateX(-50%);
+  width: 500px;
+  max-height: 300px;
+  overflow-y: auto;
+  z-index: 1000;
+}
+
+/* Part of search suggestions */
+.suggestion-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px;
+  border-bottom: 1px solid #444;
+  cursor: pointer;
+}
+
+.suggestion-item:hover {
+  background: #1e1e1e;
+}
+
+.suggestion-img {
+  width: 40px;
+  height: 40px;
+  background: #444;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+}
+
+.suggestion-text {
+  display: flex;
+  flex-direction: column;
+}
+
+.suggestion-title {
+  font-weight: bold;
+  color: white;
+}
+
+.suggestion-sub {
+  font-size: 12px;
+  color: #aaa;
+}
+
+.card-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;  
+  justify-content: center;
+  width: 100%;
+}
+
+.event-card-large {
+  width: 1000px; 
+  height: 455px;         
+  display: flex;
+  gap: 30px;
+  color: rgb(202,190,168);
+  border: 2px solid #c084fc;
+  border-radius: 20px;
+  padding: 20px;
+}
+
+.event-image{
+    border: 2px solid #888;
+    border-radius: 20px;
+    width: 350px;
+    color: white;
+    display: flex;
+    font-weight: bold;
+    align-items: center;
+    justify-content: center;
+}
+
+/* footer formatting*/
 footer {
     display: flex;
     align-items: center;
