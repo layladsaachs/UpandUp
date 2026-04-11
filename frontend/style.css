@@ -89,6 +89,11 @@ header {
   padding: 20px;
 }
 
+.event-card-large:hover{
+    transform: scale(1.02);
+    transition: transform 0.3s ease;
+}
+
 .event-image{
     border: 2px solid #888;
     border-radius: 20px;

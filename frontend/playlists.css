@@ -1,0 +1,80 @@
+.playlist-container {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  padding: 20px;
+  color: white;
+}
+
+#playlistName {
+  font-size: 40px;
+  font-weight: bold;
+  outline: none;
+}
+
+.playlist-actions {
+  display: flex;
+  gap: 20px;
+  font-size: 22px;
+  color: #aaa;
+}
+
+.playlist-actions i {
+  cursor: pointer;
+}
+
+.playlist-actions i:hover {
+  color: rgb(226, 108, 209);
+}
+
+.playlist-song {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: #2c2c2c;
+  padding: 10px 15px;
+  border-radius: 8px;
+}
+
+.queue-btn {
+  color: #777;
+  cursor: pointer;
+}
+
+.queue-btn.active {
+  color: rgb(226, 108, 209); 
+}
+
+.like-btn.active {
+  color: rgb(226, 108, 209);
+}
+
+.song-left {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.playlist-song i {
+  margin-left: 15px;
+  cursor: pointer;
+  color: #777;
+}
+
+.playlist-song i:hover {
+  color: white;
+}
+
+#playlistSearch {
+  width: 300px;
+  padding: 8px;
+  border-radius: 8px;
+  border: none;
+  background: #2c2c2c;
+  color: white;
+}
+
+#playlistSearchResults {
+  display: flex;
+  gap: 10px;
+}
