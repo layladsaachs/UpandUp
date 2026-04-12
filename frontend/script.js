@@ -850,6 +850,10 @@ function renderQueue() {
         </div>
       </div>
     `;
+
+    currentDiv.firstElementChild.addEventListener("click", () => {
+      loadTrack(currentIndex);
+    });
   }
 
   // NEXT TRACKS (limit 5)
@@ -858,6 +862,11 @@ function renderQueue() {
   nextTracks.forEach(track => {
     const div = document.createElement("div");
     div.className = "queue-item";
+    if (queue.indexOf(track) === currentIndex) {
+      div.classList.add("playing");
+    }
+
+    div.dataset.index = queue.indexOf(track); 
 
     div.innerHTML = `
       <div class="queue-left">
@@ -869,6 +878,17 @@ function renderQueue() {
         </div>
       </div>
     `;
+    
+    div.addEventListener("click", () => {
+      currentIndex = parseInt(div.dataset.index);
+
+      if (isShuffleOn) {
+        shuffleIndex = shuffleOrder.indexOf(currentIndex);
+      }
+
+      currentSeconds = 0;
+      loadTrack(currentIndex);
+    });
 
     queueDiv.appendChild(div);
   });
@@ -994,13 +1014,17 @@ function attachPlaylistEvents() {
   deleteBtn.addEventListener("click", showDeleteConfirm);
 
   const shuffleBtn = document.getElementById("shuffleBtn");
-  shuffleBtn.addEventListener("click", () => {
+    shuffleBtn.addEventListener("click", () => {
     isShuffleOn = !isShuffleOn;
 
     shuffleBtn.classList.toggle("active");
 
     if (isShuffleOn) {
+      queue = [...currentPlaylist];
+
       generateShuffleOrder();
+
+      shuffleIndex = shuffleOrder.indexOf(currentIndex);
     }
   });
 
@@ -1125,11 +1149,21 @@ function attachSongEvents() {
       if (song.inQueue) {
         if (!queue.some(q => q.title === song.title)) {
           queue.push(song);
-          if (isShuffleOn) generateShuffleOrder();
         }
+
+        if (isShuffleOn) {
+          generateShuffleOrder();
+        }
+
       } else {
         const index = queue.findIndex(q => q.title === song.title);
-          if (index !== -1) {queue.splice(index, 1);}
+        if (index !== -1) {
+          queue.splice(index, 1);
+        }
+
+        if (isShuffleOn) {
+          generateShuffleOrder();
+        }
       }
 
       renderPlaylistSongs();

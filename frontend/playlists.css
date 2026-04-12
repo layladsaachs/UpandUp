@@ -182,3 +182,12 @@
 #shuffleBtn.active {
   color: rgb(226, 108, 209);
 }
+
+.queue-item.playing {
+  border-left: 4px solid rgb(226, 108, 209);
+  background: #2c2c2c;
+}
+
+.queue-item.playing .queue-title {
+  color: rgb(226, 108, 209);
+}
