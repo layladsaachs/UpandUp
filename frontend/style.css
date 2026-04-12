@@ -248,7 +248,7 @@ header button {
 }
 
 .event-list h2{
-    color: rgb(226,108,209);
+    color: #c084fc;
     font-weight: bold;
     margin-left: 180px;
     margin-bottom: 5px;
@@ -272,7 +272,7 @@ header button {
 
 .event{
     min-width: 180px;
-    height: 160px;
+    height: 178px;
     display: flex;
     color: rgb(225,225,225);
     font-weight: bold;
