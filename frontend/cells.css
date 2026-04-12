@@ -183,11 +183,9 @@
   height: 415px;
   border-radius: 20px;
   border: 2px solid #888;
-
   display: flex;
   align-items: center;
   justify-content: center;
-
   overflow: hidden;
   position: relative;
 }
@@ -212,23 +210,6 @@
   align-items: center;
   justify-content: center;
 }
-
-/*
-#nowPlayingTitle {
-  color: rgb(202, 190, 168);
-  margin-top: -5px;
-  margin-left: -180px;
-  font-size: 30px;
-  font-weight: bold;
-}
-
-#nowPlayingArtist {
-  color: rgb(202, 190, 168);
-  margin-top: 10px;
-  margin-left: -250px;
-  font-size: 16px;
-}
-*/
 
 .search-card {
   display: flex;
@@ -293,7 +274,7 @@
 
 #nowPlayingTitle {
   color: rgb(202, 190, 168);
-  font-size: 24px;
+  font-size: 30px;
   font-weight: bold;
   max-width: 300px;
   white-space: nowrap;
@@ -311,3 +292,20 @@
   text-overflow: ellipsis;
   margin: 5px auto 0;
 }
+
+/*
+#nowPlayingTitle {
+  color: rgb(202, 190, 168);
+  margin-top: -5px;
+  margin-left: -180px;
+  font-size: 30px;
+  font-weight: bold;
+}
+
+#nowPlayingArtist {
+  color: rgb(202, 190, 168);
+  margin-top: 10px;
+  margin-left: -250px;
+  font-size: 16px;
+}
+*/

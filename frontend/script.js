@@ -770,7 +770,7 @@ sortOptions.forEach(option => {
 });
 
 //
-// Queueu Dropdown menu
+// Queue Dropdown menu
 const queueBtn = document.getElementById("queueBtn");
 const queueMenu = document.getElementById("queueMenu");
 
@@ -798,17 +798,23 @@ function renderQueue() {
 
   const current = queue[currentIndex];
 
-  // Current
+  // CURRENT TRACK
   if (current) {
     currentDiv.innerHTML = `
-      <div class="queue-item">
-        <div>${current.title}</div>
-        <div style="font-size:12px;color:#aaa;">${current.artist}</div>
+      <div class="queue-item current">
+        <div class="queue-left">
+          <div class="queue-img">img</div>
+
+          <div class="queue-text">
+            <div class="queue-title">${current.title}</div>
+            <div class="queue-artist">${current.artist}</div>
+          </div>
+        </div>
       </div>
     `;
   }
 
-  // Next Limit = 5
+  // NEXT TRACKS (limit 5)
   const nextTracks = queue.slice(currentIndex + 1, currentIndex + 6);
 
   nextTracks.forEach(track => {
@@ -816,8 +822,14 @@ function renderQueue() {
     div.className = "queue-item";
 
     div.innerHTML = `
-      <div>${track.title}</div>
-      <div style="font-size:12px;color:#aaa;">${track.artist}</div>
+      <div class="queue-left">
+        <div class="queue-img">img</div>
+
+        <div class="queue-text">
+          <div class="queue-title">${track.title}</div>
+          <div class="queue-artist">${track.artist}</div>
+        </div>
+      </div>
     `;
 
     queueDiv.appendChild(div);
@@ -890,8 +902,24 @@ if (createPlaylistBtn && results) {
 let currentPlaylist = [];
 
 function renderPlaylistCreator() {
+  currentPlaylist = [
+    {
+      title: "Levels",
+      artist: "Avicii",
+      image: "",
+      inQueue: false
+    },
+    {
+      title: "Strobe",
+      artist: "deadmau5",
+      image: "",
+      inQueue: true
+    }
+  ];
+
   results.innerHTML = `
     <div class="playlist-container">
+
       <h1 contenteditable="true" id="playlistName">Playlist Name</h1>
 
       <div class="playlist-actions">
@@ -902,13 +930,17 @@ function renderPlaylistCreator() {
       <div id="playlistSongs"></div>
 
       <h3>Add to this playlist</h3>
+
       <input type="text" id="playlistSearch" placeholder="Search">
+
       <div id="playlistSearchResults" class="card-row"></div>
+
     </div>
   `;
 
   attachPlaylistEvents();
   renderPlaylistSongs();
+
 }
 
 //
@@ -929,12 +961,28 @@ function attachPlaylistEvents() {
 
   searchInput.addEventListener("input", async () => {
     const query = searchInput.value.trim();
-    if (!query) return;
 
-    const res = await fetch(`http://127.0.0.1:8000/search?q=${query}`);
-    const data = await res.json();
+    if (!query) {
+      document.getElementById("playlistSearchResults").innerHTML = "";
+      return;
+    }
 
-    renderPlaylistSearch(data.tracks || []);
+    try {
+      const res = await fetch(`http://127.0.0.1:8000/search?q=${query}`);
+      const data = await res.json();
+
+      renderPlaylistSearch(data.tracks || []);
+
+    } catch (err) {
+      console.log("API failed, using dummy data");
+
+      renderPlaylistSearch([
+        { name: "Track 1", artist: "Artist A" },
+        { name: "Track 2", artist: "Artist B" },
+        { name: "Track 3", artist: "Artist C" },
+        { name: "Track 4", artist: "Artist D" }
+      ]);
+    }
   });
 }
 
@@ -982,15 +1030,18 @@ function renderPlaylistSongs() {
     div.innerHTML = `
       <div class="song-left">
         <div class="song-img">img</div>
-        <div>
-          <div>${song.title}</div>
-          <div class="sub">${song.artist}</div>
+
+        <div class="song-text">
+          <div class="song-title">${song.title}</div>
+          <div class="song-artist">${song.artist}</div>
         </div>
       </div>
 
-      <i class="fa-solid fa-list-ul queue-btn ${song.inQueue ? "active" : ""}" data-index="${index}"></i>
-      <i class="fa-solid fa-trash remove-btn" data-index="${index}"></i>
-      <i class="fa-regular fa-thumbs-up like-btn" data-index="${index}"></i>
+      <div class="song-actions">
+        <i class="fa-solid fa-list-ul queue-btn ${song.inQueue ? "active" : ""}" data-index="${index}"></i>
+        <i class="fa-solid fa-trash remove-btn" data-index="${index}"></i>
+        <i class="fa-regular fa-thumbs-up like-btn" data-index="${index}"></i>
+      </div>
     `;
 
     container.appendChild(div);
@@ -1069,5 +1120,23 @@ function renderPlaylistSearch(tracks) {
     container.appendChild(card);
   });
 }
+
+//
+// Shuffle playlist
+//
+shuffleBtn.addEventListener("click", () => {
+  shuffleBtn.classList.toggle("active");
+
+  for (let i = currentPlaylist.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [currentPlaylist[i], currentPlaylist[j]] = [currentPlaylist[j], currentPlaylist[i]];
+  }
+
+  queue = [...currentPlaylist];
+  currentIndex = 0;
+
+  renderPlaylistSongs();
+  renderQueue();
+});
 
 });
