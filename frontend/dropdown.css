@@ -202,3 +202,7 @@ input:checked + .slider::before {
   max-height: 200px;
   overflow-y: auto;
 }
+
+.queue-item.current {
+  background: #3a3a3a;
+}

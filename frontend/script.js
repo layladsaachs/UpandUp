@@ -565,7 +565,17 @@ function play() {
 
     if (currentSeconds >= t.duration) {
       currentSeconds = 0;
-      if (!isLooping) currentIndex++;
+      if (!isLooping) if (isShuffleOn) {
+        shuffleIndex++;
+
+        if (shuffleIndex >= shuffleOrder.length) {
+          generateShuffleOrder();
+        }
+
+        currentIndex = shuffleOrder[shuffleIndex];
+      } else {
+        currentIndex++;
+      };
       if (currentIndex >= queue.length) return stop();
       loadTrack(currentIndex);
     }
@@ -584,7 +594,18 @@ function togglePlay() {
 
 if (playPauseBtn) playPauseBtn.addEventListener("click", togglePlay);
 if (nextBtn) nextBtn.addEventListener("click", () => {
-  currentIndex++;
+  if (isShuffleOn) {
+    shuffleIndex++;
+
+    if (shuffleIndex >= shuffleOrder.length) {
+      generateShuffleOrder(); // reshuffle when finished
+    }
+
+    currentIndex = shuffleOrder[shuffleIndex];
+  } else {
+    currentIndex++;
+  }
+
   currentSeconds = 0;
   loadTrack(currentIndex);
 });
@@ -963,6 +984,10 @@ function renderPlaylistCreator() {
 //
 // Playlist buttons
 //
+let isShuffleOn = false;
+let shuffleOrder = [];
+let shuffleIndex = 0;
+
 function attachPlaylistEvents() {
   const deleteBtn = document.getElementById("deletePlaylistBtn");
 
@@ -970,11 +995,13 @@ function attachPlaylistEvents() {
 
   const shuffleBtn = document.getElementById("shuffleBtn");
   shuffleBtn.addEventListener("click", () => {
-    for (let i = currentPlaylist.length - 1; i > 0; i--) {
-      const j = Math.floor(Math.random() * (i + 1));
-      [currentPlaylist[i], currentPlaylist[j]] = [currentPlaylist[j], currentPlaylist[i]];
+    isShuffleOn = !isShuffleOn;
+
+    shuffleBtn.classList.toggle("active");
+
+    if (isShuffleOn) {
+      generateShuffleOrder();
     }
-    renderPlaylistSongs();
   });
 
   const searchInput = document.getElementById("playlistSearch");
@@ -997,13 +1024,27 @@ function attachPlaylistEvents() {
       console.log("API failed, using dummy data");
 
       renderPlaylistSearch([
-        { name: "Track 1", artist: "Artist A" },
-        { name: "Track 2", artist: "Artist B" },
-        { name: "Track 3", artist: "Artist C" },
-        { name: "Track 4", artist: "Artist D" }
+        { name: "Track 1", artist: "Artist" },
+        { name: "Track 2", artist: "Artist" },
+        { name: "Track 3", artist: "Artist" },
+        { name: "Track 4", artist: "Artist" }
       ]);
     }
   });
+}
+
+//
+// shuffle
+//
+function generateShuffleOrder() {
+  shuffleOrder = [...Array(queue.length).keys()]; 
+
+  for (let i = shuffleOrder.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [shuffleOrder[i], shuffleOrder[j]] = [shuffleOrder[j], shuffleOrder[i]];
+  }
+
+  shuffleIndex = shuffleOrder.indexOf(currentIndex);
 }
 
 //
@@ -1084,6 +1125,7 @@ function attachSongEvents() {
       if (song.inQueue) {
         if (!queue.some(q => q.title === song.title)) {
           queue.push(song);
+          if (isShuffleOn) generateShuffleOrder();
         }
       } else {
         const index = queue.findIndex(q => q.title === song.title);
