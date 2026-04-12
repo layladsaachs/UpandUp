@@ -1091,7 +1091,8 @@ function showDeleteConfirm() {
   document.getElementById("confirmDelete").onclick = () => {
     currentPlaylist = [];
     popup.remove();
-    results.innerHTML = "";
+    document.getElementById("homeContent").style.display = "none";
+    document.getElementById("dynamicContent").innerHTML = "...";;
   };
 
   document.getElementById("cancelDelete").onclick = () => {

@@ -18,7 +18,17 @@ header {
     align-items: center;
     justify-content: space-between;
     padding: 0px 30px;
-    border-bottom: 3px solid rgb(19, 19, 18);
+    margin-top: 5px;
+    margin-bottom: 2px;
+    border-bottom: 5px solid rgb(19, 19, 18);
+}
+
+#logo {
+  cursor: pointer;
+}
+
+#logo:hover {
+  opacity: 0.8;
 }
 
 #searchButton{
@@ -132,7 +142,7 @@ header input {
     border: 2px solid rgb(225, 225, 225)
 }
 
-.logo img{
+#logo img{
     width: 150px;
     padding-bottom: 0px;
     cursor: pointer;
@@ -181,7 +191,7 @@ header button {
 /*Styling and dimensions for boxes*/
 .cell.left {
     width: 380px;
-    height: 518px;
+    height: 550px;
     border: 2px solid #c084fc;
     border-radius: 15px;
     gap: 12px;
@@ -196,7 +206,7 @@ header button {
 
 .cell.middle {
     width: 700px;
-    height: 518px;
+    height: 550px;
     gap: 30px;
     border: 2px solid #c084fc;
     border-radius: 15px;
@@ -211,7 +221,7 @@ header button {
 
 .cell.right {
     width: 380px;
-    height: 518px;
+    height: 550px;
     border: 2px solid #c084fc;
     border-radius: 15px;
     gap: 20px;
@@ -227,7 +237,7 @@ header button {
 /*Styling for tab button*/
 /*Highlight button in dark gray to indicate current tab*/
 .active-tab {
-    color: rgb(226, 108, 209);
+    color: #c084fc;
 }
 
 

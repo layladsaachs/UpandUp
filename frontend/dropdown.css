@@ -118,11 +118,11 @@ input:checked + .slider::before {
 }
 
 .sort-option:hover {
-  color: rgb(226, 108, 209);
+  color: #c084fc;
 }
 
 .sort-option.active {
-  color: rgb(226, 108, 209);
+  color: #c084fc;
 }
 
 #sortMenu{
