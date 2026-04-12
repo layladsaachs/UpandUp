@@ -394,6 +394,8 @@ function renderSongs(tracks) {
       image: track.image
     }];
 
+    currentPlaylist.forEach(song => song.inQueue = false);
+
     currentIndex = 0;
     loadTrack(currentIndex);
   };
@@ -497,12 +499,24 @@ const durationEl = document.getElementById("duration");
 const progressBar = document.getElementById("progressBar");
 const volumeSlider = document.getElementById("volumeSlider");
 
+/*
 let queue = [
   { title: "Song Name", artist: "Artist Name", duration: 180, image: "" },
   { title: "Second Song", artist: "Another Artist", duration: 215, image: "" }
 ];
 
 let currentIndex = 0;
+*/
+
+let queue = [
+  { title: "Levels", artist: "Avicii", duration: 180, image: "" },
+  { title: "Strobe", artist: "deadmau5", duration: 200, image: "" },
+  { title: "Opus", artist: "Eric Prydz", duration: 220, image: "" },
+  { title: "Titanium", artist: "David Guetta", duration: 210, image: "" }
+];
+
+let currentIndex = 0;
+
 let isPlaying = false;
 let isLooping = false;
 let currentSeconds = 0;
@@ -777,7 +791,10 @@ const queueMenu = document.getElementById("queueMenu");
 if (queueBtn && queueMenu) {
   queueBtn.addEventListener("click", (e) => {
     e.stopPropagation();
-    queueMenu.classList.toggle("hidden");
+    const isOpening = queueMenu.classList.toggle("hidden");
+    if (!isOpening) {
+      renderQueue(); 
+    }
   });
 
   document.addEventListener("click", (e) => {
@@ -953,7 +970,10 @@ function attachPlaylistEvents() {
 
   const shuffleBtn = document.getElementById("shuffleBtn");
   shuffleBtn.addEventListener("click", () => {
-    currentPlaylist.sort(() => Math.random() - 0.5);
+    for (let i = currentPlaylist.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [currentPlaylist[i], currentPlaylist[j]] = [currentPlaylist[j], currentPlaylist[i]];
+    }
     renderPlaylistSongs();
   });
 
@@ -1062,9 +1082,12 @@ function attachSongEvents() {
       song.inQueue = !song.inQueue;
 
       if (song.inQueue) {
-        queue.push(song);
+        if (!queue.some(q => q.title === song.title)) {
+          queue.push(song);
+        }
       } else {
-        queue = queue.filter(q => q.title !== song.title);
+        const index = queue.findIndex(q => q.title === song.title);
+          if (index !== -1) {queue.splice(index, 1);}
       }
 
       renderPlaylistSongs();
@@ -1120,23 +1143,5 @@ function renderPlaylistSearch(tracks) {
     container.appendChild(card);
   });
 }
-
-//
-// Shuffle playlist
-//
-shuffleBtn.addEventListener("click", () => {
-  shuffleBtn.classList.toggle("active");
-
-  for (let i = currentPlaylist.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [currentPlaylist[i], currentPlaylist[j]] = [currentPlaylist[j], currentPlaylist[i]];
-  }
-
-  queue = [...currentPlaylist];
-  currentIndex = 0;
-
-  renderPlaylistSongs();
-  renderQueue();
-});
 
 });
