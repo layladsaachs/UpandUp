@@ -286,10 +286,8 @@ function renderSuggestions(data) {
       suggestionsBox.classList.add("hidden");
 
       if (item.date) {
-        // EVENT → go to event page
         showEventPage(item);
       } else {
-        // MUSIC → trigger search
         searchBar.value = item.name;
         searchButton.click();
       }
@@ -499,15 +497,6 @@ const durationEl = document.getElementById("duration");
 const progressBar = document.getElementById("progressBar");
 const volumeSlider = document.getElementById("volumeSlider");
 
-/*
-let queue = [
-  { title: "Song Name", artist: "Artist Name", duration: 180, image: "" },
-  { title: "Second Song", artist: "Another Artist", duration: 215, image: "" }
-];
-
-let currentIndex = 0;
-*/
-
 let queue = [
   { title: "Levels", artist: "Avicii", duration: 180, image: "" },
   { title: "Strobe", artist: "deadmau5", duration: 200, image: "" },
@@ -598,7 +587,7 @@ if (nextBtn) nextBtn.addEventListener("click", () => {
     shuffleIndex++;
 
     if (shuffleIndex >= shuffleOrder.length) {
-      generateShuffleOrder(); // reshuffle when finished
+      generateShuffleOrder(); 
     }
 
     currentIndex = shuffleOrder[shuffleIndex];
@@ -760,12 +749,10 @@ if (gear && person && settingsMenu && profileMenu) {
   });
 
   document.addEventListener("click", (e) => {
- // If click is NOT inside settings menu or gear button → close it
  if (!settingsMenu.contains(e.target) && !gear.contains(e.target)) {
   settingsMenu.classList.add("hidden");
  }
 
- // If click is NOT inside profile menu or person button → close it
  if (!profileMenu.contains(e.target) && !person.contains(e.target)) {
   profileMenu.classList.add("hidden");
  }
@@ -949,7 +936,7 @@ const results = document.getElementById("results");
 
 if (createPlaylistBtn && results) {
   createPlaylistBtn.addEventListener("click", () => {
-    console.log("playlist button clicked"); // debug
+    console.log("playlist button clicked");
     renderPlaylistCreator();
   });
 }
