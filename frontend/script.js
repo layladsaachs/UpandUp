@@ -116,7 +116,7 @@ if (searchButton && searchBar) {
     } catch (err) {
       console.warn("Backend failed → using mock data");
 
-      // test data (DELETE LATER)
+      /* test data (DELETE LATER)
       renderSearchResults({
       tracks: [
         {
@@ -219,6 +219,8 @@ if (searchButton && searchBar) {
         }
       ]
       });
+      */
+
     }
     });
 }
@@ -411,6 +413,7 @@ function renderArtists(artists) {
  artists.forEach(artist => {
   const card = document.createElement("div");
   card.className = "card";
+  card.dataset.index = index;
 
   card.innerHTML = `
    <div>
