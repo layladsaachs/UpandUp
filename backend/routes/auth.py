@@ -38,7 +38,7 @@ def login():
         "client_id": SPOTIFY_CLIENT_ID,
         "response_type": "code",
         "redirect_uri": SPOTIFY_REDIRECT_URI,
-        "scope": "user-read-email playlist-read-private user-library-read user-follow-read",
+        "scope": "user-read-email playlist-read-private user-library-read user-follow-read streaming user-modify-playback-state user-read-playback-state",
         "show_dialog": "true"
     }
 
@@ -173,8 +173,8 @@ def user_search(q: str):
             "artist": item.get("artists")[0]["name"],
             "album": item.get("album")["name"],
             "image": images[0]["url"] if images else None,
-            "preview": item.get("preview_url"),
-            "duration": item.get("duration_ms") // 1000
+            "duration": item.get("duration_ms") // 1000,
+            "uri": item.get("uri")
         })
 
     # artists
@@ -256,3 +256,12 @@ def get_user_artists():
         })
 
     return results
+
+@router.get("/token")
+def get_token():
+    access_token = access_token_storage.get("access_token")
+    
+    if not access_token:
+        return {"error": "User not authenticated"}
+
+    return {"access_token": access_token}

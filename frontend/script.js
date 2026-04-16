@@ -371,11 +371,6 @@ function renderSongs(tracks) {
     const index = clickedCard.dataset.index;
     const track = tracks[index];
 
-    if (track.preview) {
-      audio.src = track.preview;
-      audio.play();
-    }
-
     queue = [{
       title: track.name,
       artist: track.artist,
@@ -383,11 +378,15 @@ function renderSongs(tracks) {
       image: track.image
     }];
 
-    currentPlaylist.forEach(song => song.inQueue = false);
-
     currentIndex = 0;
     loadTrack(currentIndex);
-  };
+
+    if (track.uri) {
+      await playTrack(track.uri);
+    } else {
+      console.log("No URI found");
+    }
+};
 }
 
 //
@@ -502,6 +501,97 @@ let isPlaying = false;
 let isLooping = false;
 let currentSeconds = 0;
 let timer = null;
+
+let spotifyToken = "";
+let player = null;
+let deviceId = null;
+
+async function loadSpotifyToken() {
+  const res = await fetch("http://127.0.0.1:8000/token");
+  const data = await res.json();
+
+  if (data.error) {
+    throw new Error(data.error);
+  }
+
+  spotifyToken = data.access_token;
+}
+
+async function transferPlaybackHere() {
+  await fetch("https://api.spotify.com/v1/me/player", {
+    method: "PUT",
+    headers: {
+      "Content-Type": "application/json",
+      "Authorization": `Bearer ${spotifyToken}`
+    },
+    body: JSON.stringify({
+      device_ids: [deviceId],
+      play: false
+    })
+  });
+
+}
+
+window.onSpotifyWebPlaybackSDKReady = async () => {
+  try {
+    await loadSpotifyToken();
+
+    player = new Spotify.Player({
+      name: "Vybe Player",
+      getOAuthToken: cb =>  cb(spotifyToken),
+      volume: 0.5
+    });
+
+    player.addListener("ready", async ({ device_id }) => {
+      deviceId = device_id;
+      console.log("Spotify player ready:", device_id);
+      await transferPlaybackHere();
+    });
+
+    player.addListener("not_ready", ({ device_id}) => {
+      console.log("Device offline:", device_id);
+    });
+
+    player.addListener("initialization_error", ({ message }) => {
+      console.log("Initialization error:", message);
+    });
+
+    player.addListener("authentication_error", ({ message }) => {
+      console.log("Authentication error:", message);
+    });
+
+    player.addListener("account_error", ({ message }) => {
+      console.log("Account error:", message);
+    });
+
+    await player.connect();
+  } catch (err) {
+    console.error("Spotify SDK setup failed:", err);
+  }
+};
+
+async function playTrack(uri) {
+  if (!spotifyToken || !deviceId) {
+    console.error("Player not ready yet");
+    return;
+  }
+
+  const res = await fetch(`https://api.spotify.com/v1/me/player/play?device_id=${deviceId}`, {
+    method: "PUT",
+    headers: {
+      "Content-Type": "application/json",
+      "Authorization": `Bearer ${spotifyToken}`
+    },
+    body: JSON.stringify({
+      uris: [uri]
+    })
+  });
+
+  if (!res.ok) {
+    const text = await res.text();
+    console.error("Play failed:", text);
+  }
+}
 
 function formatTime(s) {
   const m = Math.floor(s / 60);
