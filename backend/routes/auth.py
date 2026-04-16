@@ -354,3 +354,41 @@ def get_favorites():
   })
 
  return results
+
+#
+# artist profile - top
+#
+@router.get("/artist-top")
+def get_artist_top(name: str):
+    access_token = access_token_storage.get("access_token")
+    if not access_token:
+        return []
+
+    headers = {
+        "Authorization": f"Bearer {access_token}"
+    }
+
+    search_url = "https://api.spotify.com/v1/search"
+    params = {
+        "q": f"artist:{name.strip()}",
+        "type": "track",
+        "limit": 10
+    }
+
+    search_res = requests.get(search_url, headers=headers, params=params)
+    search_data = search_res.json()
+
+    results = []
+
+    for track in search_data.get("tracks", {}).get("items", []):
+        images = track.get("album", {}).get("images", [])
+
+        results.append({
+            "name": track.get("name"),
+            "artist": track.get("artists")[0]["name"],
+            "image": images[0]["url"] if images else None,
+            "preview": track.get("preview_url"),
+            "duration": track.get("duration_ms") // 1000
+        })
+
+    return results

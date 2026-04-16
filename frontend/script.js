@@ -304,7 +304,12 @@ function renderArtists(artists) {
    <div class="card-title">${artist.name}</div>
   `;
 
+  card.addEventListener("click", () => {
+    openArtistView(artist);
+  });
+
   container.appendChild(card);
+
  });
 }
 
@@ -328,6 +333,10 @@ function renderAlbums(albums) {
     <div class="card-title">${album.name}</div>
     <div class="card-subtitle">${album.artist}</div
   `;
+
+  card.addEventListener("click", () => {
+    openAlbumView(album);
+  });
 
   container.appendChild(card);
  });
@@ -824,7 +833,6 @@ function renderQueue() {
       <div class="queue-item current">
         <div class="queue-left">
           <div class="queue-img">img</div>
-
           <div class="queue-text">
             <div class="queue-title">${current.title}</div>
             <div class="queue-artist">${current.artist}</div>
@@ -1156,6 +1164,73 @@ function renderPlaylistSearch(tracks) {
   });
 }
 
+//
+// open artist profile
+//
+async function openArtistView(artist) {
+ const results = document.getElementById("results");
+
+ results.innerHTML = `
+  <div class="playlist-container">
+   <h1 id="playlistName">${artist.name}</h1>
+
+   <div class="playlist-actions">
+    <i class="fa-solid fa-shuffle" id="shuffleBtn"></i>
+   </div>
+
+   <div id="playlistSongs"></div>
+  </div>
+ `;
+
+ try {
+  const res = await fetch(`http://127.0.0.1:8000/artist-top?name=${artist.name}`);
+  const tracks = await res.json();
+
+  currentPlaylist = tracks.map(t => ({
+   title: t.name,
+   artist: t.artist,
+   image: t.image,
+   preview: t.preview,
+   inQueue: false
+  }));
+
+  renderPlaylistSongs(); 
+
+ } catch (err) {
+  console.error("Artist load failed", err);
+ }
+}
+
+//
+// open album
+//
+async function openAlbumView(album) {
+ const results = document.getElementById("results");
+
+ results.innerHTML = `
+  <div class="playlist-container">
+   <h1 id="playlistName">${album.name}</h1>
+   <div id="playlistSongs"></div>
+  </div>
+ `;
+
+ try {
+  const res = await fetch(`http://127.0.0.1:8000/album-tracks?name=${album.name}`);
+  const tracks = await res.json();
+
+  currentPlaylist = tracks.map(t => ({
+   title: t.name,
+   artist: t.artist,
+   image: t.image,
+   preview: t.preview,
+   inQueue: false
+  }));
+
+  renderPlaylistSongs();
+ } catch (err) {
+  console.error("Album load failed", err);
+ }
+}
 
 //
 // home screen data
