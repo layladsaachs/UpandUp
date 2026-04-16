@@ -38,7 +38,7 @@ def login():
         "client_id": SPOTIFY_CLIENT_ID,
         "response_type": "code",
         "redirect_uri": SPOTIFY_REDIRECT_URI,
-        "scope": "user-read-email playlist-read-private user-library-read user-follow-read streaming user-modify-playback-state user-read-playback-state",
+        "scope": "user-read-email playlist-read-private user-library-read user-follow-read streaming user-modify-playback-state user-read-playback-state user-top-read user-read-recently-played",
         "show_dialog": "true"
     }
 
@@ -265,3 +265,92 @@ def get_token():
         return {"error": "User not authenticated"}
 
     return {"access_token": access_token}
+
+#
+# recently played
+#
+@router.get("/recent")
+def get_recent():
+ access_token = access_token_storage.get("access_token")
+ if not access_token:
+  return []
+
+ url = "https://api.spotify.com/v1/me/player/recently-played"
+ headers = {"Authorization": f"Bearer {access_token}"}
+
+ res = requests.get(url, headers=headers)
+ data = res.json()
+
+ results = []
+ for item in data.get("items", []):
+  track = item.get("track")
+  images = track.get("album", {}).get("images", [])
+
+  results.append({
+   "name": track.get("name"),
+   "artist": track.get("artists")[0]["name"],
+   "image": images[0]["url"] if images else None,
+   "preview": track.get("preview_url"),
+   "duration": track.get("duration_ms") // 1000
+  })
+
+ return results
+
+#
+# popular
+#
+@router.get("/top")
+def get_top_tracks():
+ access_token = access_token_storage.get("access_token")
+ if not access_token:
+  return []
+
+ url = "https://api.spotify.com/v1/me/top/tracks"
+ headers = {"Authorization": f"Bearer {access_token}"}
+
+ res = requests.get(url, headers=headers)
+ data = res.json()
+
+ results = []
+ for track in data.get("items", []):
+  images = track.get("album", {}).get("images", [])
+
+  results.append({
+   "name": track.get("name"),
+   "artist": track.get("artists")[0]["name"],
+   "image": images[0]["url"] if images else None,
+   "preview": track.get("preview_url"),
+   "duration": track.get("duration_ms") // 1000
+  })
+
+ return results
+
+#
+# favorite songs
+#
+@router.get("/favorites")
+def get_favorites():
+ access_token = access_token_storage.get("access_token")
+ if not access_token:
+  return []
+
+ url = "https://api.spotify.com/v1/me/tracks"
+ headers = {"Authorization": f"Bearer {access_token}"}
+
+ res = requests.get(url, headers=headers)
+ data = res.json()
+
+ results = []
+ for item in data.get("items", []):
+  track = item.get("track")
+  images = track.get("album", {}).get("images", [])
+
+  results.append({
+   "name": track.get("name"),
+   "artist": track.get("artists")[0]["name"],
+   "image": images[0]["url"] if images else None,
+   "preview": track.get("preview_url"),
+   "duration": track.get("duration_ms") // 1000
+  })
+
+ return results
