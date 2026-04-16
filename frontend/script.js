@@ -877,53 +877,6 @@ function renderQueue() {
 }
 
 //
-// LIVE EVENTS INDIVIDUAL RESULTS
-//
-function showEventPage(event) {
-  const tab1 = document.getElementById("tab1");
-  const tab2 = document.getElementById("tab2");
-  const tab1Button = document.getElementById("tab1Button");
-  const tab2Button = document.getElementById("tab2Button");
-
-  const mainContent = document.getElementById("eventsMainContent");
-  const container = document.getElementById("eventDetailContainer");
-
-  tab2.classList.add("active");
-  tab1.classList.remove("active");
-
-  tab2Button.classList.add("active-tab");
-  tab1Button.classList.remove("active-tab");
-
-  // Hide carousel
-  mainContent.style.display = "none";
-
-  // Show specific event 
-  container.innerHTML = `
-    <button id="backToEvents">← Back</button>
-
-    <div class="card-wrapper">
-      <div class="event-card-large">
-        <div class="event-image">image</div>
-        <div class="main-card">
-          <h2>${event.date}</h2>
-          <h3>${event.time}</h3>
-          <h1>${event.name}</h1>
-          <h3>Venue</h3>
-          <h3>City, State</h3>
-          <button>View on Ticketmaster</button>
-        </div>
-      </div>
-    </div>
-  `;
-
-  // Backtrack
-  document.getElementById("backToEvents").onclick = () => {
-  container.innerHTML = "";
-  mainContent.style.display = "block";
-};
-}
-
-//
 // create playlist
 //
 const createPlaylistBtn = document.getElementById("createPlaylistBtn");

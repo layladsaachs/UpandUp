@@ -89,41 +89,6 @@ header {
   color: #aaa;
 }
 
-.card-wrapper {
-  display: flex;
-  flex-direction: column;
-  align-items: center;  
-  justify-content: center;
-  width: 100%;
-}
-
-.event-card-large {
-  width: 1000px; 
-  height: 455px;         
-  display: flex;
-  gap: 30px;
-  color: rgb(202,190,168);
-  border: 2px solid #c084fc;
-  border-radius: 20px;
-  padding: 20px;
-}
-
-.event-card-large:hover{
-    transform: scale(1.02);
-    transition: transform 0.3s ease;
-}
-
-.event-image{
-    border: 2px solid #888;
-    border-radius: 20px;
-    width: 350px;
-    color: white;
-    display: flex;
-    font-weight: bold;
-    align-items: center;
-    justify-content: center;
-}
-
 /* footer formatting*/
 footer {
     display: flex;
