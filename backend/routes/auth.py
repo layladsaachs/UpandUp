@@ -157,18 +157,18 @@ def user_search(q: str):
 
     params = {
         "q": q,
-        "type": "track",
+        "type": "track,artist,album",
         "limit": 10
     }
 
     response = requests.get(search_url, headers=headers, params=params)
     data = response.json()
 
-    results = []
-
+    # tracks
+    tracks = []
     for item in data.get("tracks", {}).get("items", []):
         images = item.get("album", {}).get("images", [])
-        results.append({
+        tracks.append({
             "name": item.get("name"),
             "artist": item.get("artists")[0]["name"],
             "album": item.get("album")["name"],
@@ -177,7 +177,30 @@ def user_search(q: str):
             "duration": item.get("duration_ms") // 1000
         })
 
-    return results
+    # artists
+    artists = []
+    for item in data.get("artists", {}).get("items", []):
+        images = item.get("images", [])
+        artists.append({
+            "name" : item.get("name"),
+            "image" : images[0]["url"] if images else None
+        })
+
+    # albums
+    albums = []
+    for item in data.get("albums", {}).get("items", []):
+        images = item.get("images", [])
+        albums.append({
+            "name" : item.get("name"),
+            "artist" : item.get("artists")[0]["name"],
+            "image" : images[0]["url"] if images else None
+        })
+
+    return {
+        "tracks" : tracks,
+        "artists" : artists,
+        "albums" : albums,
+    }
 
 @router.get("/albums")
 def get_user_albums():

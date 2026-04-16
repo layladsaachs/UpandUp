@@ -100,18 +100,7 @@ if (searchButton && searchBar) {
       const res = await fetch(`http://127.0.0.1:8000/search?q=${query}`);
       const data = await res.json();
 
-      // If backend only returns tracks (for now)
-      if (Array.isArray(data)) {
-      renderSearchResults({
-        tracks: data,
-        artists: [],
-        albums: [],
-        events: []
-      });
-      } else {
-      // full response (later)
       renderSearchResults(data);
-      }
 
     } catch (err) {
       console.warn("Backend failed → using mock data");
@@ -337,7 +326,7 @@ function renderSearchResults(data) {
   </div>
  `;
 
- renderSongs(data.tracks || data);
+ renderSongs(data.tracks || []);
  renderArtists(data.artists || []);
  renderAlbums(data.albums || []);
  renderEvents(data.events || []);
@@ -359,7 +348,7 @@ function renderSongs(tracks) {
 
   container.innerHTML = "";
 
-  tracks.forEach((track, index) => {
+  tracks.slice(0,4).forEach((track, index) => {
     const card = document.createElement("div");
     card.className = "card";
     card.dataset.index = index;
@@ -402,7 +391,7 @@ function renderSongs(tracks) {
 }
 
 //
-// Artists search results
+// Artist search results
 //
 function renderArtists(artists) {
  const container = document.getElementById("artistsResults");
@@ -410,16 +399,16 @@ function renderArtists(artists) {
 
  container.innerHTML = "";
 
- artists.forEach(artist => {
+ artists.slice(0, 4).forEach((artist, index) => {
   const card = document.createElement("div");
   card.className = "card";
   card.dataset.index = index;
 
   card.innerHTML = `
-   <div>
-    <img src="${artist.image}" style="width:100%; height:100%; object-fit:cover;">
+   <div class="card-img">
+     ${artist.image ? `<img src="${artist.image}">` : "image"}
    </div>
-   <div>${artist.name}</div>
+   <div class="card-title">${artist.name}</div>
   `;
 
   container.appendChild(card);
@@ -435,16 +424,16 @@ function renderAlbums(albums) {
 
  container.innerHTML = "";
 
- albums.forEach(album => {
+ albums.slice(0,4).forEach(album => {
   const card = document.createElement("div");
   card.className = "card";
 
   card.innerHTML = `
-   <div>
-    <img src="${album.image}" style="width:100%; height:100%; object-fit:cover;">
-   </div>
-   <div>${album.name}</div>
-   <div>${album.artist}</div>
+    <div class="card-img">
+      ${album.image ? `<img src="${album.image}">` : "image"}
+    </div>
+    <div class="card-title">${album.name}</div>
+    <div class="card-subtitle">${album.artist}</div
   `;
 
   container.appendChild(card);
@@ -460,7 +449,7 @@ function renderEvents(events) {
 
  container.innerHTML = "";
 
- events.forEach(event => {
+ events.slice(0,4).forEach(event => {
   const card = document.createElement("div");
   card.className = "card";
 
