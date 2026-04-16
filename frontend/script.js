@@ -103,115 +103,9 @@ if (searchButton && searchBar) {
       renderSearchResults(data);
 
     } catch (err) {
-      console.warn("Backend failed → using mock data");
-
-      /* test data (DELETE LATER)
-      renderSearchResults({
-      tracks: [
-        {
-          name: "Test Song",
-          artist: "Test Artist",
-          album: "Test Album",
-          image: "image",
-          duration: 200,
-          preview: ""
-        },
-        {
-          name: "Test Song",
-          artist: "Test Artist",
-          album: "Test Album",
-          image: "image",
-          duration: 200,
-          preview: ""
-        },
-        {
-          name: "Test Song",
-          artist: "Test Artist",
-          album: "Test Album",
-          image: "image",
-          duration: 200,
-          preview: ""
-        },
-        {
-          name: "Test Song",
-          artist: "Test Artist",
-          album: "Test Album",
-          image: "image",
-          duration: 200,
-          preview: ""
-        },
-      ],
-      artists: [
-        {
-          name: "Test Artist",
-          image: "image"
-        },
-        {
-          name: "Test Artist",
-          image: "image"
-        },
-        {
-          name: "Test Artist",
-          image: "image"
-        },
-        {
-          name: "Test Artist",
-          image: "image"
-        }
-      ],
-      albums: [
-        {
-          name: "Test Album",
-          artist: "Test Artist",
-          image: "image"
-        },
-        {
-          name: "Test Album",
-          artist: "Test Artist",
-          image: "image"
-        },
-        {
-          name: "Test Album",
-          artist: "Test Artist",
-          image: "image"
-        },
-        {
-          name: "Test Album",
-          artist: "Test Artist",
-          image: "image"
-        },
-      ],
-      events: [
-        {
-          name: "Test Concert",
-          artist: "Test Artist",
-          date: "05/01/2026",
-          time: "7:00 PM"
-        },
-        {
-          name: "Test Concert",
-          artist: "Test Artist",
-          date: "05/02/2026",
-          time: "7:00 PM"
-        },
-        {
-          name: "Test Concert",
-          artist: "Test Artist",
-          date: "05/03/2026",
-          time: "7:00 PM"
-        },
-        {
-          name: "Test Concert",
-          artist: "Test Artist",
-          date: "05/04/2026",
-          time: "7:00 PM"
-        }
-      ]
-      });
-      */
-
+      console.warn("Backend failed");
     }
-    });
+  });
 }
 
 //
@@ -624,43 +518,26 @@ function loadTrack(i) {
 }
 
 function play() {
-  if (!queue[currentIndex]) return;
-  isPlaying = true;
-  playPauseIcon.className = "fa-solid fa-pause";
+ if (!queue[currentIndex]) return;
 
-  clearInterval(timer);
-  timer = setInterval(() => {
-    const t = queue[currentIndex];
-    currentSeconds++;
-    currentTimeEl.textContent = formatTime(currentSeconds);
+ const track = queue[currentIndex];
+ if (track.preview) {
+  audio.src = track.preview;
+ }
 
-    if (currentSeconds >= t.duration) {
-      currentSeconds = 0;
-      if (!isLooping) if (isShuffleOn) {
-        shuffleIndex++;
-
-        if (shuffleIndex >= shuffleOrder.length) {
-          generateShuffleOrder();
-        }
-
-        currentIndex = shuffleOrder[shuffleIndex];
-      } else {
-        currentIndex++;
-      };
-      if (currentIndex >= queue.length) return stop();
-      loadTrack(currentIndex);
-    }
-  }, 1000);
+ audio.play();
+ isPlaying = true;
+ playPauseIcon.className = "fa-solid fa-pause";
 }
 
 function stop() {
-  isPlaying = false;
-  playPauseIcon.className = "fa-solid fa-play";
-  clearInterval(timer);
+ audio.pause();
+ isPlaying = false;
+ playPauseIcon.className = "fa-solid fa-play";
 }
 
 function togglePlay() {
-  isPlaying ? stop() : play();
+ isPlaying ? stop() : play();
 }
 
 if (playPauseBtn) playPauseBtn.addEventListener("click", togglePlay);
@@ -778,12 +655,48 @@ function renderRow(id, items) {
   });
 }
 
-renderRow("popularRow", ["Song 1", "Song 2", "Song 3", "Song 4"]);
-renderRow("recommendRow", ["Rec 1", "Rec 2", "Rec 3", "Rec 4"]);
-renderRow("recentRow", ["Recent 1", "Recent 2", "Recent 3", "Recent 4"]);
-renderRow("favSongsRow", ["Song 1", "Song 2", "Song 3", "Song 4"]);
-renderRow("favArtistsRow", ["Artist 1", "Artist 2", "Artist 3", "Artist 4"]);
-renderRow("favAlbumsRow", ["Album 1", "Album 2", "Album 3", "Album 4"]);
+function renderTrackRow(id, tracks) {
+ const container = document.getElementById(id);
+ if (!container) return;
+
+ container.innerHTML = "";
+
+ tracks.slice(0, 4).forEach((track, index) => {
+  const card = document.createElement("div");
+  card.className = "card";
+
+  card.innerHTML = `
+   <div class="card-img">
+     ${track.image ? `<img src="${track.image}">` : "image"}
+   </div>
+   <div class="card-title">${track.name}</div>
+   <div class="card-subtitle">${track.artist}</div>
+  `;
+
+  container.appendChild(card);
+ });
+}
+
+function renderArtistRow(id, artists) {
+ const container = document.getElementById(id);
+ if (!container) return;
+
+ container.innerHTML = "";
+
+ artists.slice(0, 4).forEach(artist => {
+  const card = document.createElement("div");
+  card.className = "card";
+
+  card.innerHTML = `
+   <div class="card-img">
+     ${artist.image ? `<img src="${artist.image}">` : "image"}
+   </div>
+   <div class="card-title">${artist.name}</div>
+  `;
+
+  container.appendChild(card);
+ });
+}
 
 //
 // RIGHT CELL (NOW PLAYING)
@@ -1289,5 +1202,39 @@ function renderPlaylistSearch(tracks) {
     container.appendChild(card);
   });
 }
+
+
+//
+// home screen data
+//
+async function loadHomeData() {
+ try {
+  const [topRes, recentRes, favRes, artistRes, albumRes] = await Promise.all([
+    fetch("http://127.0.0.1:8000/top"),
+    fetch("http://127.0.0.1:8000/recent"),
+    fetch("http://127.0.0.1:8000/favorites"),
+    fetch("http://127.0.0.1:8000/artists"),
+    fetch("http://127.0.0.1:8000/albums")     
+  ]);
+
+  const top = await topRes.json();
+  const recent = await recentRes.json();
+  const favorites = await favRes.json();
+  const artists = await artistRes.json();
+  const albums = await albumRes.json();
+
+  renderTrackRow("popularRow", top);
+  renderTrackRow("recommendRow", top);  
+  renderTrackRow("recentRow", recent);
+  renderTrackRow("favSongsRow", favorites);
+  renderArtistRow("favArtistsRow", artists);
+  renderTrackRow("favAlbumsRow", albums);
+
+ } catch (err) {
+  console.error("Failed to load home data", err);
+ }
+}
+
+loadHomeData();
 
 });
