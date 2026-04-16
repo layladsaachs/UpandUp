@@ -1237,4 +1237,53 @@ async function loadHomeData() {
 
 loadHomeData();
 
+//
+// click home button to default home page ()
+// Issue: Latency
+//
+const logo = document.getElementById("logo");
+
+if (logo) {
+ logo.addEventListener("click", () => {
+
+  tab1.classList.add("active");
+  tab2.classList.remove("active");
+
+  tab1Button.classList.add("active-tab");
+  tab2Button.classList.remove("active-tab");
+
+  const results = document.getElementById("results");
+  if (results) {
+    results.innerHTML = `
+      <div class="section">
+        <h3>Popular</h3>
+        <div class="card-row" id="popularRow"></div>
+      </div>
+      <div class="section">
+        <h3>Recommendations</h3>
+        <div class="card-row" id="recommendRow"></div>
+      </div>
+      <div class="section">
+        <h3>Recently Played</h3>
+        <div class="card-row" id="recentRow"></div>
+      </div>
+      <div class="section">
+        <h3>Favorite Songs</h3>
+        <div class="card-row" id="favSongsRow"></div>
+      </div>
+      <div class="section">
+        <h3>Favorite Artists</h3>
+        <div class="card-row" id="favArtistsRow"></div>
+      </div>
+      <div class="section">
+        <h3>Favorite Albums</h3>
+        <div class="card-row" id="favAlbumsRow"></div>
+      </div>
+      `;
+  }
+
+  loadHomeData();
+ });
+}
+
 });
