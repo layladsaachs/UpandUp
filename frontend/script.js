@@ -364,7 +364,7 @@ function renderSongs(tracks) {
     container.appendChild(card);
   });
 
-  container.onclick = (e) => {
+  container.onclick = async (e) => {
     const clickedCard = e.target.closest(".card");
     if (!clickedCard) return;
 
