@@ -276,7 +276,8 @@ function renderSongs(tracks) {
     loadTrack(currentIndex);
 
     if (track.uri) {
-      await playTrack(track.uri);
+      const uris = tracks.map(track => track.uri).filter(Boolean);
+      await playTrack(track.uri, uris);
     } else {
       console.log("No URI found");
     }
@@ -526,11 +527,13 @@ window.onSpotifyWebPlaybackSDKReady = async () => {
   }
 };
 
-async function playTrack(uri) {
+async function playTrack(selectedUri, uris) {
   if (!spotifyToken || !deviceId) {
     console.error("Player not ready yet");
     return;
   }
+
+  const offsetIndex = uris.indexOf(selectedUri);
 
   const res = await fetch(`https://api.spotify.com/v1/me/player/play?device_id=${deviceId}`, {
     method: "PUT",
@@ -539,7 +542,8 @@ async function playTrack(uri) {
       "Authorization": `Bearer ${spotifyToken}`
     },
     body: JSON.stringify({
-      uris: [uri]
+      uris: uris,
+      offset: { position: offsetIndex }
     })
   });
 
@@ -613,14 +617,23 @@ if (nextBtn) {
     if (!player) return;
 
     await player.nextTrack();
-  });;
+  });
 }
 
 if (prevBtn) {
   prevBtn.addEventListener("click", async () => {
     if (!player) return;
 
-    await player.previousTrack();
+    const state = await player.getCurrentState();
+    if (!state) return;
+
+    const seconds = state.position / 1000;
+
+    if (seconds > 3) {
+      await player.seek(0);
+    } else {
+      await player.previousTrack();
+    }
   });
 }
 
