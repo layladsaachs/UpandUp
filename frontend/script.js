@@ -408,6 +408,7 @@ let timer = null;
 let spotifyToken = "";
 let player = null;
 let deviceId = null;
+let progressTimer = null;
 
 async function loadSpotifyToken() {
   const res = await fetch("http://127.0.0.1:8000/token");
@@ -467,7 +468,59 @@ window.onSpotifyWebPlaybackSDKReady = async () => {
       console.log("Account error:", message);
     });
 
+    player.addListener("player_state_changed", state => {
+      if (!state) return;
+
+      const current = state.track_window.current_track;
+      if (!current) return;
+
+      const image = current.album.images[0]?.url || "";
+
+      songTitle.textContent = current.name;
+      artistName.textContent = current.artists.map( a => a.name).join(", ");
+
+      durationEl.textContent = formatTime(
+        Math.floor(current.duration_ms / 1000)
+      );
+
+      currentTimeEl.textContent = formatTime(
+        Math.floor(state.position / 1000)
+      );
+
+      progressBar.value = current.duration_ms
+        ? (state.position / current.duration_ms) * 100
+        : 0;
+
+      playPauseIcon.className = state.paused
+        ? "fa-solid fa-play"
+        : "fa-solid fa-pause";
+
+      if (image) {
+        albumArt.src = image;
+        albumArt.style.display = "block";
+        albumArtFallback.style.display = "none";
+      } else {
+        albumArt.style.display = "none";
+        albumArtFallback.style.display = "block";
+      }
+
+      const nowImg = document.getElementById("nowPlayingImg");
+      const nowFallback = document.getElementById("nowPlayingFallback");
+
+      if (nowImg && nowFallback) {
+        if (image) {
+          nowImg.src = image;
+          nowImg.style.display = "block";
+          nowFallback.style.display = "none";
+        } else {
+          nowImg.style.display = "none";
+          nowFallback.style.display = "block";
+        }
+      }
+    });
+
     await player.connect();
+    startProgressUpdater();
   } catch (err) {
     console.error("Spotify SDK setup failed:", err);
   }
@@ -502,6 +555,25 @@ function formatTime(s) {
   return `${String(m).padStart(2, "0")}:${String(sec).padStart(2, "0")}`;
 }
 
+function startProgressUpdater() {
+  clearInterval(progressTimer);
+
+  progressTimer = setInterval(async () => {
+    if (!player) return;
+
+    const state = await player.getCurrentState();
+    if (!state) return;
+
+    currentTimeEl.textContent = formatTime(
+      Math.floor(state.position / 1000)
+    );
+
+    progressBar.value = state.duration
+      ? (state.position / state.duration) * 100
+      : 0;
+  }, 1000);
+}
+
 function loadTrack(i) {
   renderQueue();
   const t = queue[i];
@@ -526,51 +598,51 @@ function loadTrack(i) {
   updateNowPlaying(t);
 }
 
-function play() {
- if (!queue[currentIndex]) return;
+async function togglePlay() {
+  if (!player) return;
 
- const track = queue[currentIndex];
- if (track.preview) {
-  audio.src = track.preview;
- }
-
- audio.play();
- isPlaying = true;
- playPauseIcon.className = "fa-solid fa-pause";
+  await player.togglePlay();
 }
 
-function stop() {
- audio.pause();
- isPlaying = false;
- playPauseIcon.className = "fa-solid fa-play";
+if (playPauseBtn) {
+  playPauseBtn.addEventListener("click", togglePlay);
 }
 
-function togglePlay() {
- isPlaying ? stop() : play();
+if (nextBtn) {
+  nextBtn.addEventListener("click", async () => {
+    if (!player) return;
+
+    await player.nextTrack();
+  });;
 }
 
-if (playPauseBtn) playPauseBtn.addEventListener("click", togglePlay);
-if (nextBtn) nextBtn.addEventListener("click", () => {
-  if (isShuffleOn) {
-    shuffleIndex++;
+if (prevBtn) {
+  prevBtn.addEventListener("click", async () => {
+    if (!player) return;
 
-    if (shuffleIndex >= shuffleOrder.length) {
-      generateShuffleOrder(); 
-    }
+    await player.previousTrack();
+  });
+}
 
-    currentIndex = shuffleOrder[shuffleIndex];
-  } else {
-    currentIndex++;
-  }
+if (progressBar) {
+  progressBar.addEventListener("input", async () => {
+    if (!player) return;
 
-  currentSeconds = 0;
-  loadTrack(currentIndex);
-});
-if (prevBtn) prevBtn.addEventListener("click", () => {
-  currentIndex--;
-  currentSeconds = 0;
-  loadTrack(currentIndex);
-});
+    const state = await player.getCurrentState();
+    if (!state) return;
+
+    const newPos = (progressBar.value / 100) * state.duration;
+    await player.seek(newPos);
+  });
+}
+
+if (volumeSlider) {
+  volumeSlider.addEventListener("input", async () => {
+    if (!player) return;
+
+    await player.setVolume(volumeSlider.value / 100);
+  });
+}
 
 //
 // LEFT CELL (LIBRARY)
