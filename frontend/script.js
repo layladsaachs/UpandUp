@@ -157,7 +157,9 @@ function renderSuggestions(data) {
     div.className = "suggestion-item";
 
     div.innerHTML = `
-      <div class="suggestion-img">img</div>
+      <div class="suggestion-img">
+        ${item.image ? `<img src="${item.image}">` : "image"}
+      </div>
       <div class="suggestion-text">
         <div class="suggestion-title">${item.name}</div>
         <div class="suggestion-sub">
@@ -917,7 +919,9 @@ function renderQueue() {
     currentDiv.innerHTML = `
       <div class="queue-item current">
         <div class="queue-left">
-          <div class="queue-img">img</div>
+          <div class="queue-img">
+            ${current.image ? `<img src="${current.image}">` : "image"}
+          </div>
           <div class="queue-text">
             <div class="queue-title">${current.title}</div>
             <div class="queue-artist">${current.artist}</div>
