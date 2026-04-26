@@ -949,7 +949,9 @@ function renderQueue() {
 
     div.innerHTML = `
       <div class="queue-left">
-        <div class="queue-img">img</div>
+        <div class="queue-img">
+          ${track.image ? `<img src="${track.image}">` : "image"}
+        </div>
 
         <div class="queue-text">
           <div class="queue-title">${track.title}</div>
@@ -1147,7 +1149,9 @@ function renderPlaylistSongs() {
 
     div.innerHTML = `
       <div class="song-left">
-        <div class="song-img">img</div>
+        <div class="song-img">
+          ${song.image ? `<img src="${song.image}">` : "image"}
+        </div>
 
         <div class="song-text">
           <div class="song-title">${song.title}</div>
