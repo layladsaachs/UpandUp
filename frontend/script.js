@@ -389,20 +389,11 @@ const prevBtn = document.getElementById("prevBtn");
 const playPauseBtn = document.getElementById("playPauseBtn");
 const playPauseIcon = document.getElementById("playPauseIcon");
 const nextBtn = document.getElementById("nextBtn");
-const likeBtn = document.getElementById("likeBtn");
-const likeIcon = document.getElementById("likeIcon");
 
 const currentTimeEl = document.getElementById("currentTime");
 const durationEl = document.getElementById("duration");
 const progressBar = document.getElementById("progressBar");
 const volumeSlider = document.getElementById("volumeSlider");
-
-let queue = [
-  { title: "Levels", artist: "Avicii", duration: 180, image: "" },
-  { title: "Strobe", artist: "deadmau5", duration: 200, image: "" },
-  { title: "Opus", artist: "Eric Prydz", duration: 220, image: "" },
-  { title: "Titanium", artist: "David Guetta", duration: 210, image: "" }
-];
 
 let currentIndex = 0;
 
@@ -979,122 +970,6 @@ function renderQueue() {
 }
 
 //
-// create playlist
-//
-const createPlaylistBtn = document.getElementById("createPlaylistBtn");
-const results = document.getElementById("results");
-
-if (createPlaylistBtn && results) {
-  createPlaylistBtn.addEventListener("click", () => {
-    console.log("playlist button clicked");
-    renderPlaylistCreator();
-  });
-}
-
-//
-// Shows playlist in middle cell
-//
-let currentPlaylist = [];
-
-function renderPlaylistCreator() {
-  currentPlaylist = [
-    {
-      title: "Levels",
-      artist: "Avicii",
-      image: "",
-      inQueue: false
-    },
-    {
-      title: "Strobe",
-      artist: "deadmau5",
-      image: "",
-      inQueue: true
-    }
-  ];
-
-  results.innerHTML = `
-    <div class="playlist-container">
-
-      <h1 contenteditable="true" id="playlistName">Playlist Name</h1>
-
-      <div class="playlist-actions">
-        <i class="fa-solid fa-shuffle" id="shuffleBtn"></i>
-        <i class="fa-solid fa-trash" id="deletePlaylistBtn"></i>
-      </div>
-
-      <div id="playlistSongs"></div>
-
-      <h3>Add to this playlist</h3>
-
-      <input type="text" id="playlistSearch" placeholder="Search">
-
-      <div id="playlistSearchResults" class="card-row"></div>
-
-    </div>
-  `;
-
-  attachPlaylistEvents();
-  renderPlaylistSongs();
-
-}
-
-//
-// Playlist buttons
-//
-let isShuffleOn = false;
-let shuffleOrder = [];
-let shuffleIndex = 0;
-
-function attachPlaylistEvents() {
-  const deleteBtn = document.getElementById("deletePlaylistBtn");
-
-  deleteBtn.addEventListener("click", showDeleteConfirm);
-
-  const shuffleBtn = document.getElementById("shuffleBtn");
-    shuffleBtn.addEventListener("click", () => {
-    isShuffleOn = !isShuffleOn;
-
-    shuffleBtn.classList.toggle("active");
-
-    if (isShuffleOn) {
-      queue = [...currentPlaylist];
-
-      generateShuffleOrder();
-
-      shuffleIndex = shuffleOrder.indexOf(currentIndex);
-    }
-  });
-
-  const searchInput = document.getElementById("playlistSearch");
-
-  searchInput.addEventListener("input", async () => {
-    const query = searchInput.value.trim();
-
-    if (!query) {
-      document.getElementById("playlistSearchResults").innerHTML = "";
-      return;
-    }
-
-    try {
-      const res = await fetch(`http://127.0.0.1:8000/search?q=${query}`);
-      const data = await res.json();
-
-      renderPlaylistSearch(data.tracks || []);
-
-    } catch (err) {
-      console.log("API failed, using dummy data");
-
-      renderPlaylistSearch([
-        { name: "Track 1", artist: "Artist" },
-        { name: "Track 2", artist: "Artist" },
-        { name: "Track 3", artist: "Artist" },
-        { name: "Track 4", artist: "Artist" }
-      ]);
-    }
-  });
-}
-
-//
 // shuffle
 //
 function generateShuffleOrder() {
@@ -1109,44 +984,15 @@ function generateShuffleOrder() {
 }
 
 //
-// confirm delete
-//
-function showDeleteConfirm() {
-  const popup = document.createElement("div");
-  popup.className = "confirm-popup";
-
-  popup.innerHTML = `
-    <div class="confirm-box">
-      <h3>Delete this Playlist?</h3>
-      <button id="confirmDelete">Delete</button>
-      <button id="cancelDelete">Keep</button>
-    </div>
-  `;
-
-  document.body.appendChild(popup);
-
-  document.getElementById("confirmDelete").onclick = () => {
-    currentPlaylist = [];
-    popup.remove();
-    document.getElementById("homeContent").style.display = "none";
-    document.getElementById("dynamicContent").innerHTML = "...";;
-  };
-
-  document.getElementById("cancelDelete").onclick = () => {
-    popup.remove();
-  };
-}
-
-//
 // list of playlist songs
 //
-function renderPlaylistSongs() {
+function renderTracklistSongs() {
   const container = document.getElementById("playlistSongs");
   if (!container) return;
 
   container.innerHTML = "";
 
-  currentPlaylist.forEach((song, index) => {
+  currentTracklist.forEach((song, index) => {
     const div = document.createElement("div");
     div.className = "playlist-song";
 
@@ -1164,8 +1010,6 @@ function renderPlaylistSongs() {
 
       <div class="song-actions">
         <i class="fa-solid fa-list-ul queue-btn ${song.inQueue ? "active" : ""}" data-index="${index}"></i>
-        <i class="fa-solid fa-trash remove-btn" data-index="${index}"></i>
-        <i class="fa-regular fa-thumbs-up like-btn" data-index="${index}"></i>
       </div>
     `;
 
@@ -1176,13 +1020,13 @@ function renderPlaylistSongs() {
 }
 
 //
-// song options: queue, delete, like
+// song options: queue
 //
 function attachSongEvents() {
   document.querySelectorAll(".queue-btn").forEach(btn => {
     btn.addEventListener("click", () => {
       const i = btn.dataset.index;
-      const song = currentPlaylist[i];
+      const song = currentTracklist[i];
 
       song.inQueue = !song.inQueue;
 
@@ -1206,57 +1050,9 @@ function attachSongEvents() {
         }
       }
 
-      renderPlaylistSongs();
+      renderTracklistSongs();
       renderQueue();
     });
-  });
-
-  document.querySelectorAll(".remove-btn").forEach(btn => {
-    btn.addEventListener("click", () => {
-      const i = btn.dataset.index;
-      currentPlaylist.splice(i, 1);
-      renderPlaylistSongs();
-    });
-  });
-
-  document.querySelectorAll(".like-btn").forEach(btn => {
-    btn.addEventListener("click", () => {
-      btn.classList.toggle("active");
-    });
-  });
-}
-
-//
-// playlist search
-//
-function renderPlaylistSearch(tracks) {
-  const container = document.getElementById("playlistSearchResults");
-  if (!container) return;
-
-  container.innerHTML = "";
-
-  tracks.slice(0, 4).forEach(track => {
-    const card = document.createElement("div");
-    card.className = "card";
-
-    card.innerHTML = `
-      <div class="card-img">image</div>
-      <div>${track.name}</div>
-      <div class="card-subtitle">${track.artist}</div>
-    `;
-
-    card.addEventListener("click", () => {
-      currentPlaylist.push({
-        title: track.name,
-        artist: track.artist,
-        image: track.image,
-        inQueue: false
-      });
-
-      renderPlaylistSongs();
-    });
-
-    container.appendChild(card);
   });
 }
 
@@ -1282,7 +1078,7 @@ async function openArtistView(artist) {
   const res = await fetch(`http://127.0.0.1:8000/artist-top?name=${artist.name}`);
   const tracks = await res.json();
 
-  currentPlaylist = tracks.map(t => ({
+  currentTracklist = tracks.map(t => ({
    title: t.name,
    artist: t.artist,
    image: t.image,
@@ -1290,7 +1086,7 @@ async function openArtistView(artist) {
    inQueue: false
   }));
 
-  renderPlaylistSongs(); 
+  renderTracklistSongs(); 
 
  } catch (err) {
   console.error("Artist load failed", err);
@@ -1314,7 +1110,7 @@ async function openAlbumView(album) {
   const res = await fetch(`http://127.0.0.1:8000/album-tracks?name=${album.name}`);
   const tracks = await res.json();
 
-  currentPlaylist = tracks.map(t => ({
+  currentTracklist = tracks.map(t => ({
    title: t.name,
    artist: t.artist,
    image: t.image,
@@ -1322,7 +1118,7 @@ async function openAlbumView(album) {
    inQueue: false
   }));
 
-  renderPlaylistSongs();
+  renderTracklistSongs();
  } catch (err) {
   console.error("Album load failed", err);
  }

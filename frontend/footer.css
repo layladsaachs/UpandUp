@@ -131,10 +131,6 @@
   gap: 10px;
 }
 
-#loopBtn{
-    margin-left: 38px;
-}
-
 #currentTime,
 #duration {
   color: rgb(202, 190, 168);

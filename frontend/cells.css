@@ -306,19 +306,64 @@
   margin: 5px auto 0;
 }
 
-/*
-#nowPlayingTitle {
-  color: rgb(202, 190, 168);
-  margin-top: -5px;
-  margin-left: -180px;
-  font-size: 30px;
-  font-weight: bold;
+/* tracklist for middle cell */
+.playlist-container {
+    width: 100%;
+    height: 100%;
+    overflow-y: auto;
+    padding: 30px;
+    background: black;
 }
 
-#nowPlayingArtist {
-  color: rgb(202, 190, 168);
-  margin-top: 10px;
-  margin-left: -250px;
-  font-size: 16px;
+.playlist-song {
+    width: 100%;
+    height: 70px;
+    background: #222;
+    border: 1px solid #444;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 15px;
 }
-*/
+
+.song-left {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.song-img {
+    width: 50px;
+    height: 50px;
+    flex-shrink: 0;
+    overflow: hidden;
+}
+
+.song-img img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.song-title {
+    color: rgb(221, 211, 211);
+    max-width: 480px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    font-weight: bold;
+}
+
+.song-artist {
+    color: gray;
+    max-width: 480px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    font-size: 14px;
+}
+
+.song-actions {
+    display: flex;
+    gap: 15px;
+}

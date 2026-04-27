@@ -6,7 +6,6 @@
     <link rel="stylesheet" href="footer.css">
     <link rel="stylesheet" href="cells.css">
     <link rel="stylesheet" href="dropdown.css">
-    <link rel="stylesheet" href="playlists.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
 </head>
 
@@ -43,7 +42,6 @@
 
                 <div class="library-icons">
                     <button id="menuBtn"><i class="fa-solid fa-bars"></i></button>
-                    <button id="createPlaylistBtn"><i class="fa-solid fa-plus"></i></button>
                 </div>
             </div>
 
@@ -119,8 +117,8 @@
 <!-- FILTER MENU -->
 <div id="sortMenu" class="dropdown hidden">
     <h3>Sort By</h3>
-    <div class="sort-option active" data-sort="recent">Recently Played</div>
-    <div class="sort-option" data-sort="added">Recently Added</div>
+    <div class="sort-option active" data-sort="recent">Most Recent</div>
+    <div class="sort-option" data-sort="added">Oldest</div>
     <div class="sort-option" data-sort="alpha">Alphabetical</div>
 </div>
 
@@ -240,10 +238,6 @@
 
       <button class="player-btn" id="nextBtn" title="Next">
         <i class="fa-solid fa-forward-step"></i>
-      </button>
-
-      <button class="player-btn small" id="likeBtn" title="Like">
-        <i class="fa-regular fa-thumbs-up" id="likeIcon"></i>
       </button>
 
       <button class="player-btn small" id="queueBtn" title="Queue">
