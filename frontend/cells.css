@@ -307,12 +307,24 @@
 }
 
 /* tracklist for middle cell */
+#playlistName{
+  color: white;
+  font-size: 42px;
+  margin-top: 0px;
+  margin-bottom: 5px;
+}
+
 .playlist-container {
     width: 100%;
     height: 100%;
     overflow-y: auto;
     padding: 30px;
     background: black;
+}
+
+.playlist-actions {
+  margin-top: 0;
+  margin-bottom: 15px;
 }
 
 .playlist-song {
@@ -364,6 +376,28 @@
 }
 
 .song-actions {
-    display: flex;
-    gap: 15px;
+    margin-left: auto;
+    color: gray;
+}
+
+.queue-btn {
+    color: gray;
+    font-size: 25px;
+    cursor: pointer;
+}
+
+.queue-btn.active {
+    color: rgb(226, 108, 209);
+}
+
+#shuffleBtn {
+    color: gray;
+    font-size: 30px;
+    margin-top: 10px;
+    margin-bottom: 20px;
+    cursor: pointer;
+}
+
+#shuffleBtn.active {
+    color: rgb(226, 108, 209);
 }

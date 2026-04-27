@@ -337,7 +337,7 @@ function renderAlbums(albums) {
       ${album.image ? `<img src="${album.image}">` : "image"}
     </div>
     <div class="card-title">${album.name}</div>
-    <div class="card-subtitle">${album.artist}</div
+    <div class="card-subtitle">${album.artist}</div>
   `;
 
   card.addEventListener("click", () => {
@@ -352,27 +352,34 @@ function renderAlbums(albums) {
 // Events search results
 //
 function renderEvents(events) {
- const container = document.getElementById("eventsResults");
- if (!container) return;
+  const container = document.getElementById("eventsResults");
+  if (!container) return;
 
- container.innerHTML = "";
+  container.innerHTML = "";
 
- events.slice(0,4).forEach(event => {
-  const card = document.createElement("div");
-  card.className = "card";
+  events.slice(0,4).forEach(event => {
+    const card = document.createElement("div");
 
-  card.innerHTML = `
-   <div>
-    <img src="${event.image}" style="width: 100%; height: 100%; object-fit:cover;">
-   </div>
-   <div>${event.name}</div>
-   <div>${event.artist}</div>
-   <div>${event.date}</div>
-   <div>${event.time}</div>
-  `;
+    card.className = "event";
 
-  container.appendChild(card);
- });
+    card.innerHTML = `
+      <div class="event-img">
+        <img src="${event.image}" alt="event">
+      </div>
+
+      <div class="event-title">${event.name || ""}</div>
+      <div class="event-date">${event.date || ""}</div>
+      <div class="event-venue">${event.venue || ""}</div>
+    `;
+
+    if (event.url) {
+      card.addEventListener("click", () => {
+        window.open(event.url, "_blank");
+      });
+    }
+
+    container.appendChild(card);
+  });
 }
 
 
@@ -396,6 +403,13 @@ const progressBar = document.getElementById("progressBar");
 const volumeSlider = document.getElementById("volumeSlider");
 
 let currentIndex = 0;
+
+let queue = [];
+let currentTracklist = [];
+
+let isShuffleOn = false;
+let shuffleOrder = [];
+let shuffleIndex = 0;
 
 let isPlaying = false;
 let isLooping = false;
@@ -609,11 +623,32 @@ if (playPauseBtn) {
 }
 
 if (nextBtn) {
-  nextBtn.addEventListener("click", async () => {
-    if (!player) return;
+    nextBtn.addEventListener("click", async () => {
+        if (!player) return;
 
-    await player.nextTrack();
-  });
+        const finishedSong = queue[currentIndex];
+
+        if (finishedSong) {
+            const match = currentTracklist.find(
+                song => song.title === finishedSong.title
+            );
+
+            if (match) {
+                match.inQueue = false;
+            }
+        }
+
+        currentIndex++;
+
+        if (currentIndex >= queue.length) {
+            currentIndex = queue.length - 1;
+        }
+
+        renderTracklistSongs();
+        renderQueue();
+
+        await player.nextTrack();
+    });
 }
 
 if (prevBtn) {
@@ -746,25 +781,60 @@ function renderRow(id, items) {
 }
 
 function renderTrackRow(id, tracks) {
- const container = document.getElementById(id);
- if (!container) return;
+  const container = document.getElementById(id);
+  if (!container) return;
 
- container.innerHTML = "";
+  container.innerHTML = "";
 
- tracks.slice(0, 4).forEach((track, index) => {
-  const card = document.createElement("div");
-  card.className = "card";
+  tracks.slice(0, 4).forEach((track, index) => {
+    const card = document.createElement("div");
+    card.className = "card";
+    card.dataset.index = index;
 
-  card.innerHTML = `
-   <div class="card-img">
-     ${track.image ? `<img src="${track.image}">` : "image"}
-   </div>
-   <div class="card-title">${track.name}</div>
-   <div class="card-subtitle">${track.artist}</div>
-  `;
+    card.innerHTML = `
+      <div class="card-img">
+        ${track.image ? `<img src="${track.image}">` : "image"}
+      </div>
+      <div class="card-title">${track.name}</div>
+      <div class="card-subtitle">${track.artist}</div>
+    `;
 
-  container.appendChild(card);
- });
+    container.appendChild(card);
+  });
+
+  container.onclick = async (e) => {
+    const clickedCard = e.target.closest(".card");
+    if (!clickedCard) return;
+
+    const index = clickedCard.dataset.index;
+    const track = tracks[index];
+
+    queue = [{
+      title: track.name,
+      artist: track.artist,
+      duration: track.duration,
+      image: track.image
+    }];
+
+    currentIndex = 0;
+    loadTrack(currentIndex);
+    if (track.uri) {
+      const uris = tracks.map(track => track.uri).filter(Boolean);
+      await playTrack(track.uri, uris);
+    } else {
+      const res = await fetch(`http://127.0.0.1:8000/search?q=${track.name} ${track.artist}`);
+      const data = await res.json();
+
+      const foundTrack = data.tracks?.[0];
+
+      if (foundTrack?.uri) {
+        await playTrack(foundTrack.uri, [foundTrack.uri]);
+      } else {
+        console.log("No URI found");
+      }
+    }
+
+  };  
 }
 
 function renderArtistRow(id, artists) {
@@ -1016,6 +1086,25 @@ function renderTracklistSongs() {
     container.appendChild(div);
   });
 
+  const shuffleBtn = document.getElementById("shuffleBtn");
+
+  if (shuffleBtn) {
+      shuffleBtn.addEventListener("click", () => {
+          isShuffleOn = !isShuffleOn;
+
+          shuffleBtn.classList.toggle("active");
+
+          if (isShuffleOn) {
+              generateShuffleOrder();
+              console.log("shuffle on");
+          } else {
+              shuffleOrder = [];
+              shuffleIndex = 0;
+              console.log("shuffle off");
+          }
+      });
+  }
+
   attachSongEvents();
 }
 
@@ -1143,7 +1232,6 @@ async function loadHomeData() {
   const artists = await artistRes.json();
   const albums = await albumRes.json();
 
-  renderTrackRow("popularRow", top);
   renderTrackRow("recommendRow", top);  
   renderTrackRow("recentRow", recent);
   renderTrackRow("favSongsRow", favorites);
@@ -1175,10 +1263,6 @@ if (logo) {
   const results = document.getElementById("results");
   if (results) {
     results.innerHTML = `
-      <div class="section">
-        <h3>Popular</h3>
-        <div class="card-row" id="popularRow"></div>
-      </div>
       <div class="section">
         <h3>Recommendations</h3>
         <div class="card-row" id="recommendRow"></div>

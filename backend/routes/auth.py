@@ -15,6 +15,7 @@ Implements the OAuth Authorization Code Flow
 from fastapi import APIRouter
 from fastapi.responses import RedirectResponse
 from urllib.parse import urlencode
+import requests
 
 from config import (
     SPOTIFY_CLIENT_ID,
@@ -202,10 +203,35 @@ def user_search(q: str):
             "image" : images[0]["url"] if images else None
         })
 
+    # events
+    ticketmaster_url = "https://app.ticketmaster.com/discovery/v2/events.json"
+
+    event_params = {
+        "apikey": TICKETMASTER_API_KEY,
+        "keyword": q,
+        "size": 4
+    }
+
+    event_res = requests.get(ticketmaster_url, params=event_params)
+    event_data = event_res.json()
+
+    events = []
+
+    if "_embedded" in event_data:
+        for event in event_data["_embedded"]["events"]:
+            events.append({
+                "name": event["name"],
+                "date": event["dates"]["start"].get("localDate", ""),
+                "venue": event["_embedded"]["venues"][0]["name"],
+                "image": event["images"][0]["url"] if event.get("images") else None,
+                "url": event.get("url")
+            })
+
     return {
         "tracks" : tracks,
         "artists" : artists,
         "albums" : albums,
+        "events" : events
     }
 
 @router.get("/albums")
