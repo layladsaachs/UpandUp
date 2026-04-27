@@ -209,7 +209,7 @@ header button {
 /* --Events Outline-- */
 
 .event-list{
-    margin-bottom: 40px;
+    margin-bottom: 10px;
 }
 
 .event-list h2{
@@ -235,22 +235,60 @@ header button {
     scroll-behavior: smooth;
 }
 
-.event{
-    min-width: 180px;
-    height: 178px;
-    display: flex;
-    color: rgb(225,225,225);
-    font-weight: bold;
-    align-items: center;
-    justify-content: center;
+.event {
+    min-width: 220px;
+    width: 220px;
+    height: 200px;
     background: #171717;
     border: 3px solid #444;
+    border-radius: 8px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 10px;
+    gap: 6px;
     cursor: pointer;
     flex-shrink: 0;
 }
 
-.event.last{
-    margin-right: 21px;
+.event-img{
+    width: 100%;
+    height: 160px;
+    overflow: hidden;
+    border-radius: 6px;
+}
+
+.event-img img{
+    width: 50%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 6px;
+}
+
+.event-title{
+    font-weight: bold;
+    height: 40px;
+    color: white;
+    font-size: 14px;
+    max-width: 150px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.event-date,
+.event-venue{
+    font-weight: bold;
+    color: #aaa;
+    font-size: 12px;
+    height: 20px;
+    overflow: hidden;
+}
+
+.event-venue{
+    font-weight: bold;
+    color: #aaa;
+    font-size: 12px;
 }
 
 .arrow{

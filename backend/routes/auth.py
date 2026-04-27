@@ -14,8 +14,14 @@ Implements the OAuth Authorization Code Flow
 
 from fastapi import APIRouter
 from fastapi.responses import RedirectResponse
-from config import SPOTIFY_CLIENT_ID, SPOTIFY_REDIRECT_URI
 from urllib.parse import urlencode
+
+from config import (
+    SPOTIFY_CLIENT_ID,
+    SPOTIFY_CLIENT_SECRET,
+    SPOTIFY_REDIRECT_URI,
+    TICKETMASTER_API_KEY
+)
 
 access_token_storage = {}
 
@@ -392,3 +398,104 @@ def get_artist_top(name: str):
         })
 
     return results
+
+
+##############################################################
+#                                                            #
+#                                                            #
+#                                                            #
+#                       Ticketmaster                         #
+#                                                            #
+#                                                            #
+#                                                            #       
+##############################################################
+
+#
+# pull random events
+#
+@router.get("/events/random")
+def get_random_events():
+    url = "https://app.ticketmaster.com/discovery/v2/events.json"
+
+    params = {
+        "apikey": TICKETMASTER_API_KEY,
+        "size": 8,
+        "classificationName": "music",
+        "keyword": "EDM"
+    }
+
+    res = requests.get(url, params=params)
+    data = res.json()
+
+    events = []
+
+    for event in data.get("_embedded", {}).get("events", []):
+        images = event.get("images", [])
+
+        events.append({
+            "name": event.get("name"),
+            "date": event.get("dates", {}).get("start", {}).get("localDate"),
+            "time": event.get("dates", {}).get("start", {}).get("localTime"),
+            "venue": event.get("_embedded", {}).get("venues", [{}])[0].get("name"),
+            "image": images[0]["url"] if images else None,
+            "url": event.get("url"),
+        })
+
+    return events
+
+#
+# pull recommendations based on top tracks
+#
+@router.get("/events/recommended")
+def get_recommended_events():
+    access_token = access_token_storage.get("access_token")
+
+    if not access_token:
+        return []
+
+    # pull user's top tracks
+    spotify_url = "https://api.spotify.com/v1/me/top/tracks"
+    headers = {
+        "Authorization": f"Bearer {access_token}"
+    }
+
+    spotify_res = requests.get(spotify_url, headers=headers)
+    spotify_data = spotify_res.json()
+
+    artist_names = []
+
+    for track in spotify_data.get("items", [])[:5]:
+        artist = track.get("artists")[0]["name"]
+
+        if artist not in artist_names:
+            artist_names.append(artist)
+
+    recommended_events = []
+
+    for artist in artist_names:
+        tm_url = "https://app.ticketmaster.com/discovery/v2/events.json"
+
+        params = {
+            "apikey": TICKETMASTER_API_KEY,
+            "keyword": artist,
+            "classificationName": "music",
+            "size": 8
+        }
+
+        res = requests.get(tm_url, params=params)
+        data = res.json()
+
+        for event in data.get("_embedded", {}).get("events", []):
+            images = event.get("images", [])
+
+            recommended_events.append({
+                "name": event.get("name"),
+                "artist": artist,
+                "date": event.get("dates", {}).get("start", {}).get("localDate"),
+                "time": event.get("dates", {}).get("start", {}).get("localTime"),
+                "venue": event.get("_embedded", {}).get("venues", [{}])[0].get("name"),
+                "image": images[0]["url"] if images else None,
+                "url": event.get("url")
+            })
+
+    return recommended_events[:8]

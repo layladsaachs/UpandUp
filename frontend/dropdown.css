@@ -190,11 +190,19 @@ input:checked + .slider::before {
 
 .queue-title {
   font-weight: bold;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 150px;
   font-size: 14px;
 }
 
 .queue-artist {
   font-size: 12px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 150px;
   color: #aaa;
 }
 

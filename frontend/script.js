@@ -23,6 +23,9 @@ if (tab1Button && tab2Button) {
     tab1.classList.remove("active");
     tab2Button.classList.add("active-tab");
     tab1Button.classList.remove("active-tab");
+
+    loadRandomEvents();
+    loadRecommendedEvents();
   };
 }
 
@@ -1405,6 +1408,61 @@ if (logo) {
 
   loadHomeData();
  });
+}
+
+//
+// Events (Random)
+//
+async function loadRandomEvents() {
+    const res = await fetch("http://127.0.0.1:8000/events/random");
+    const events = await res.json();
+
+    console.log(events);
+
+    renderEventCarousel("eventsTrack", events);
+}
+
+//
+// Recommendations
+//
+async function loadRecommendedEvents() {
+    const res = await fetch("http://127.0.0.1:8000/events/recommended");
+    const events = await res.json();
+
+    renderEventCarousel("forYouTrack", events);
+}
+
+//
+// Render Events
+//
+function renderEventCarousel(trackId, events) {
+    const container = document.getElementById(trackId);
+    if (!container) return;
+
+    container.innerHTML = "";
+
+    events.forEach(event => {
+        const card = document.createElement("div");
+        card.className = "event";
+
+        card.innerHTML = `
+            <div class="event-img">
+              <img src="${event.image}" alt="event"> 
+            </div>
+
+            <div class="event-title">${event.name || ""}</div>
+            <div class="event-date">${event.date || ""}</div>
+            <div class="event-venue">${event.venue || ""}</div>
+        `;
+
+        if (event.url) {
+            card.addEventListener("click", () => {
+                window.open(event.url, "_blank");
+            });
+        }
+
+        container.appendChild(card);
+    });
 }
 
 });
